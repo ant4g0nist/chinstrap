@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/logo.png" alt="Chinstrap" style="width:200px;"/>
 
 [![Baked by ant4g0nist](https://img.shields.io/twitter/follow/ant4g0nist?style=social)](https://twitter.com/ant4g0nist)
-[![docs](https://img.shields.io/badge/docs-passing-brightgreen)](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/index.md)
+[![docs](https://img.shields.io/badge/docs-passing-brightgreen)](https://docs.chinstrap.io)
 [![PyPI](https://img.shields.io/pypi/v/chinstrap)](https://pypi.org/project/chinstrap/)
 
 ## Overview
@@ -39,14 +39,6 @@ Here are several reasons why i built Chinstrap:
 ### Installation
 ```sh
 pip3 install chinstrap
-```
-
-or 
-
-```sh
-git clone https://github.com/ant4g0nist/chinstrap
-cd chinstrap
-python3 setup.py install
 ```
 
 ### Upgrade
@@ -166,6 +158,9 @@ To originate (deploy) the smart contracts:
 $ chinstrap --originate --network florencenet
 ```
 
+![compile-demo](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/compile-originate.gif)
+
+
 To re-orignate (reset and deploy again) the smart contracts:
 
 ```sh
@@ -174,34 +169,21 @@ $ chinstrap --originate --network florencenet --reset
 
 To start the local Flextesa sandbox:
 
-```sh
-$ chinstrap --sandbox
-```
+![sandbox-demo](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/sandbox.gif)
 
 To start the chinstrap repl (debug):
 
-```sh
-$ chinstrap --debug --network florencenet
-```
+![debug-demo](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/debug.gif)
 
 To download template contracts provided Smartpy:
 
-![debug-demo](docs/images/templates.gif)
-
-## Is Chinstrap finished?
-- Not at all. I will provide as much support as needed and we can work together and add important changes and improvements on a regular basis.
-- Pull requests are welcome
-
-# TODO
-- [ ] Improve documentation
-- [ ] Improve Sandbox support
-- [ ] Improve repl experience
-- [ ] Add tests
-- [ ] Add more test projects
-- [ ] Add a homebrew formula
+![debug-demo](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/templates.gif)
 
 # References
 - https://smartpy.io/reference.html
+- https://pytezos.org/
+- https://baking-bad.org/
+- https://michelson.baking-bad.org/
 
 # Credits
 - Truffle
