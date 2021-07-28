@@ -1,0 +1,2 @@
+recursive-include chinstrap/chinstrapCore/smartpyCli/ *
+recursive-include chinstrap/resources *

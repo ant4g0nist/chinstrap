@@ -1,0 +1,8 @@
+#!/usr/bin/env python 
+import warnings
+from chinstrap.main import main
+
+if __name__ == '__main__':
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=SyntaxWarning)
+        exit(main())

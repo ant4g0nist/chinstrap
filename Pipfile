@@ -1,0 +1,23 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+#
+# REMINDER: Update "dev" deps on setup.py when changing
+#
+
+
+[packages]
+#
+# REMINDER: Update "install_requires" deps on setup.py when changing
+#
+docker  = ">=4.4.4"
+ptpython = ">=3.0.19"
+pytezos = ">=3.2.6"
+halo = ">=0.0.31"
+python-gitlab = ">=2.10.0"
+
+[requires]
+python_version = "3.7"
