@@ -35,9 +35,16 @@ Here are several reasons why i built Chinstrap:
 ### Requirements
  * Python >= 3.7
  * Docker
+ * [Homebrew](https://brew.sh/) needs to be installed.
+
+```shell
+$ brew tap cuber/homebrew-libsecp256k1
+$ brew install libsodium libsecp256k1 gmp
+```
 
 ### Installation
-```sh
+
+```shell
 pip3 install chinstrap
 ```
 

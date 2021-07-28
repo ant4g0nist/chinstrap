@@ -35,15 +35,22 @@ Here are several reasons why i built Chinstrap:
 ### Requirements
  * Python >= 3.7
  * Docker
+ * [Homebrew](https://brew.sh/) needs to be installed.
+
+```shell
+$ brew tap cuber/homebrew-libsecp256k1
+$ brew install libsodium libsecp256k1 gmp
+```
 
 ### Installation
-```sh
-pip3 install chinstrap
+
+```shell
+$ pip3 install chinstrap
 ```
 
 or 
 
-```sh
+```shell
 git clone https://github.com/ant4g0nist/chinstrap
 cd chinstrap
 python3 setup.py install
@@ -186,7 +193,9 @@ $ chinstrap --debug --network florencenet
 
 To download template contracts provided Smartpy:
 
-![debug-demo](docs/images/templates.gif)
+```sh
+$ chinstrap --templates
+```
 
 ## Is Chinstrap finished?
 - Not at all. I will provide as much support as needed and we can work together and add important changes and improvements on a regular basis.

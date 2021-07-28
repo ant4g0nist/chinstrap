@@ -56,10 +56,12 @@ def main():
 		if args.init:
 			chinstrapCore.InitChinstrap(chinstrapPath)
 			Helpers.success('All done. Enjoy')
+			return
 		
 		if args.sandbox_detach:
 			sand = Sandbox.Sandbox()
 			sand.flextesa(accounts=args.accounts, port=args.sandbox_port, protocol_kind=args.sandbox_protocol, balance=args.account_balance, detach=True)
+			return
 
 		if args.sandbox:
 			sand = Sandbox.Sandbox()

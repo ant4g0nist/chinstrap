@@ -191,7 +191,7 @@ class Compile:
 		contracts = glob.iglob("contracts/*.py")
 
 		self.initBuildFolder()
-		self.updateCompiler()
+		# self.updateCompiler()
 		
 		for contract in contracts:
 			self.compile(contract)
