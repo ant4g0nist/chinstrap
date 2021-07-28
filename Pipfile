@@ -20,4 +20,4 @@ halo = ">=0.0.31"
 python-gitlab = ">=2.10.0"
 
 [requires]
-python_version = "3.7"
+python_version = "3"
