@@ -80,8 +80,8 @@ $ chinstrap
                                      |_|    
 
 
-usage: chinstrap [-h] [--init] [--compile] [--create] [--debug] [--templates] [--develop] [--originate] [--reset] [--network NETWORK] [--test] [--sandbox] [--sandbox-stop] [--sandbox-detach]
-                 [--sandbox-port SANDBOX_PORT] [--sandbox-protocol SANDBOX_PROTOCOL] [--accounts ACCOUNTS] [--account-balance ACCOUNT_BALANCE] [--version]
+usage: main.py [-h] [--init] [--compile] [--create] [--debug] [--templates] [--develop] [--originate] [--reset] [--network NETWORK] [--test TEST] [--sandbox] [--sandbox-stop] [--sandbox-detach]
+               [--sandbox-port SANDBOX_PORT] [--sandbox-protocol SANDBOX_PROTOCOL] [--accounts ACCOUNTS] [--account-balance ACCOUNT_BALANCE] [--version]
 
 Chinstrap - a cute framework for developing Tezos Smart Contracts
 
@@ -96,7 +96,7 @@ optional arguments:
   --originate           Run originations to deploy contracts
   --reset               Run originations to deploy contracts
   --network NETWORK     Show addresses for deployed contracts on each network
-  --test                Run PyTezos tests
+  --test TEST           Run [smartpy] or [pytest] tests.
   --sandbox             Start a Tezos local sandbox
   --sandbox-stop        Tezos local sandbox's RPC Port
   --sandbox-detach      Start a Tezos local sandbox and detach

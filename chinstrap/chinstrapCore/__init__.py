@@ -1,4 +1,5 @@
 import os
+import io
 import sys
 import glob
 import time
@@ -66,7 +67,8 @@ class InitChinstrap:
 			create pytezos test scripts
 		'''
 		Helpers.mkdir('tests')
-		Helpers.copyFile(f'{self.chinstrapPath}/resources/chinstraps/tests/samplecontract.py','tests/samplecontract.py')
+		Helpers.copyFile(f'{self.chinstrapPath}/resources/chinstraps/tests/samplecontractPytest.py','tests/samplecontractPytest.py')
+		Helpers.copyFile(f'{self.chinstrapPath}/resources/chinstraps/tests/sampleContractSmartPy.py','tests/sampleContractSmartPy.py')
 
 	def checkToCreateDir(self, dir):
 		if os.path.exists(dir):
@@ -240,9 +242,11 @@ class Compile:
 			line = proc.stdout.readline()
 			if not line:
 				break
-			if '[error]' in line:
+
+			if b'[error]' in line:
 				return False
-			
+
+
 		return True
 
 	def runPytezosCliCommand(self, cmd=[]):
@@ -255,11 +259,74 @@ class Compile:
 			Helpers.fatal("\nPlease make sure Docker is running!")
 
 class RunTests:
-	def __init__(self) -> None:
+	def __init__(self, chinstrapPath, _pytest=None) -> None:
 		sys.path.append('./tests')
+		self.cwd = os.getcwd()
+		self.chinstrapPath = chinstrapPath
 		tests = glob.iglob("./tests/*.py")
+		passedTests = []
+		failedTests = []
+
 		for file in tests:
-			pytest.main(["--no-header",file])
+			msg = HTML(f'Running tests on <ansigreen>{file}</ansigreen>')
+			if _pytest:
+				stdoutOrig = sys.stdout
+				stdoutTemp = io.StringIO()
+				sys.stdout = stdoutTemp
+				
+				res = pytest.main(['--co','-x', '-q' , f'{file}'])
+				sys.stdout = stdoutOrig
+				if "no tests collected" in stdoutTemp.getvalue():
+					pass
+
+				else:
+					print_formatted_text(msg)
+					pytest.main(["--no-header", f'{file}'])
+
+			else:
+				print_formatted_text(msg)
+				command = [f"{self.chinstrapPath}/chinstrapCore/smartpyCli/SmartPy.sh", "test", str(file), f'{self.cwd}/build/tests/']
+				passed = self.runSubprocess(command)
+				if passed:
+					passedTests.append(file)			
+				else:
+					failedTests.append(file)
+
+		print()
+
+		if not _pytest:
+			for file in passedTests:
+				msg = HTML(f'<ansigreen>[P]</ansigreen> Tests passed on <ansigreen>{file}</ansigreen>')
+				print_formatted_text(msg)		
+			
+			for file in failedTests:
+				msg = HTML(f'<ansired>[F]</ansired> Tests failed for <ansired>{file}</ansired>')
+				print_formatted_text(msg)					
+		print()
+
+	def runSubprocess(self, command):
+		"""
+			Compile with local SmartPy-cli
+		"""
+		proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		
+		result = True
+		printLine = False
+
+		while True:
+			line = proc.stdout.readline().decode().strip("\n")
+
+			if not line:
+				break
+			
+			if '[error]' in line and not 'Target "test" not found' in line:
+				printLine = True
+				result = False
+
+			if printLine:
+				print(line)
+			
+		return result
 
 class Origination:
 	def __init__(self, config, reset=False, compile=False) -> None:

@@ -15,11 +15,4 @@ class SampleContract(sp.Contract):
 		sp.verify(sp.sender == self.data.owner, message="Only owner can decrement")
 		self.data.counter -= value
 
-@sp.add_test(name = "First Test")
-def test():
-	scenario = sp.test_scenario()
-	c1 = SampleContract(0, sp.address('tz1a9GCc4UU6d5Z9spyozgKTARngb8DZKbNe'))
-	scenario += c1
-	scenario += c1.increment(1)
-
 sp.add_compilation_target('SampleContract', SampleContract(0, sp.address('tz1a9GCc4UU6d5Z9spyozgKTARngb8DZKbNe')))

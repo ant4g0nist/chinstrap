@@ -59,6 +59,8 @@ The scripts in the `originations` directory are used to `originate` \(deploy\) a
 
 The tests for the contracts reside in `tests` directory. These tests are written in `Python` and Chinstrap uses `pytest` and `pytezos` to test the contracts.
 
+With `--init`, Chinstrap creates 2 tests files one for `smartpy` and one for `pytest` `sampleContractSmartPy.py`, `samplecontractPytest.py`.
+
 ### Demo
 
 To compile the smart contracts:
@@ -81,3 +83,14 @@ To `re-originate` \(reset local state and deploy again\) the smart contracts:
 $ chinstrap --originate --network florencenet --reset
 ```
 
+To run `SmartPy` tests from `tests` folder:
+
+```shell
+$ chinstrap --test smartpy
+```
+
+To run `Pytest` tests from `tests` folder:
+
+```shell
+$ chinstrap --test pytest
+```
