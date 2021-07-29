@@ -2,7 +2,7 @@
 
 ![Chinstrap](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/logo.png)
 
-[![Baked by ant4g0nist](https://img.shields.io/twitter/follow/ant4g0nist?style=social)](https://twitter.com/ant4g0nist) [![docs](https://img.shields.io/badge/docs-passing-brightgreen)](https://github.com/ant4g0nist/chinstrap/blob/main/docs/index.md) [![PyPI](https://img.shields.io/pypi/v/chinstrap)](https://pypi.org/project/chinstrap/)
+[![Baked by ant4g0nist](https://img.shields.io/twitter/follow/ant4g0nist?style=social)](https://twitter.com/ant4g0nist) [![docs](https://img.shields.io/badge/docs-passing-brightgreen)](https://docs.chinstrap.io) [![PyPI](https://img.shields.io/pypi/v/chinstrap)](https://pypi.org/project/chinstrap/)
 
 ### Overview
 
