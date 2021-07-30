@@ -196,4 +196,4 @@ class SmartPyDownloader:
 		with open(localFilePath, 'wb') as f:
 			self.project.files.raw(file_path=path, ref='master', streamed=True, action=f.write)
 
-		spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"File saved to {localFilePath}!\n")
+		spinner.succeed(text=f"File saved to {localFilePath}!\n")

@@ -223,31 +223,31 @@ class Compile:
 		spinner.start()
 		
 		command = [f"{self.chinstrapPath}/chinstrapCore/smartpyCli/SmartPy.sh", "compile", str(contract), f'{self.cwd}/build/contracts/']
-		if not self.runSubprocess(command):
-			spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"Compilation Failed!")
+		success, msg = self.runSubprocess(command)
+		if not success:
+			spinner.fail(text=f"Compilation of {str(contract)} Failed!")
+			print("\nReason:")
+			print(msg.decode())
 			return
 
 		sys.path.append('./contracts/')
 		name = os.path.splitext(os.path.basename(contract))[0]
 
-		spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"{name} compilation successful!")
+		spinner.succeed(text=f"{name} compilation successful!")
 
 	def runSubprocess(self, command):
 		"""
 			Compile with local SmartPy-cli
 		"""
+
 		proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		_, stderr = proc.communicate()
+		exit_code = proc.wait()		
 
-		while True:
-			line = proc.stdout.readline()
-			if not line:
-				break
+		if exit_code:
+			return False, stderr
 
-			if b'[error]' in line:
-				return False
-
-
-		return True
+		return True, ''
 
 	def runPytezosCliCommand(self, cmd=[]):
 		"""
@@ -309,24 +309,17 @@ class RunTests:
 			Compile with local SmartPy-cli
 		"""
 		proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		
-		result = True
-		printLine = False
+		stdout, stderr = proc.communicate()
+		exit_code = proc.wait()		
 
-		while True:
-			line = proc.stdout.readline().decode().strip("\n")
+		if exit_code:
+			if stderr:
+				print(stderr.decode())
+			if stdout:
+				print(stdout.decode())
+			return False
 
-			if not line:
-				break
-			
-			if '[error]' in line and not 'Target "test" not found' in line:
-				printLine = True
-				result = False
-
-			if printLine:
-				print(line)
-			
-		return result
+		return True
 
 class Origination:
 	def __init__(self, config, reset=False, compile=False) -> None:
@@ -425,7 +418,7 @@ class Origination:
 
 			res = self.config.wallet.origination(script=dict(code=contract.code, storage=storage)).autofill().sign().inject(_async=False)
 
-			spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"{currentContractName}'s origination transaction at: {res['hash']}")
+			spinner.succeed(text=f"{currentContractName}'s origination transaction at: {res['hash']}")
 
 			hash = res['hash']
 			bakingRes = self.waitForBaking(hash)
@@ -474,7 +467,7 @@ class Origination:
 			except Exception as e:
 				Helpers.fatal(e)
 		
-		spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"Baking successful!")
+		spinner.succeed(text=f"Baking successful!")
 		return opg
 
 class ChinstrapState:

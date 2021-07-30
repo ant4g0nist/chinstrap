@@ -49,7 +49,7 @@ class Sandbox:
 			spinner = Halo(text=f'Fetching Flextesa sandbox. This might take a while!', spinner='dots')
 			spinner.start()
 			client.images.get(image)
-			spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"{image} ready to use!\n")
+			spinner.succeed( text=f"{image} ready to use!\n")
 
 		except docker.errors.ImageNotFound:
 			client.images.pull(image)
@@ -71,7 +71,7 @@ class Sandbox:
 				account = line.decode('utf-8').rstrip()
 				self.accounts.append(f"{account}@{balance*1_000_000}")
 				
-		spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"Accounts created!\n")
+		spinner.succeed( text=f"Accounts created!\n")
 		
 		print(f'\nname {"":16} address {"":32} publicKey {"":46} privateKey')
 		for account in self.accounts:
@@ -110,7 +110,7 @@ class Sandbox:
 		with open('/tmp/chinstrapSandboxContainer', 'w') as f:
 			f.write(json.dumps(self.state))
 
-		spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"Sandbox up and running!\n")
+		spinner.succeed( text=f"Sandbox up and running!\n")
 
 		self.started = False
 		if not detach:

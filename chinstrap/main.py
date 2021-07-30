@@ -86,7 +86,7 @@ def main():
 			while not sand.started:
 				time.sleep(2)
 
-			spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"network started!\n")
+			spinner.succeed(text=f"network started!\n")
 
 			Debugger.launch(args.network, sand.state['accounts'])
 

@@ -389,5 +389,5 @@ def waitForBaking(ophash, pytezoscli):
 		except Exception as e:
 			fatal(e)
 	
-	spinner.stop_and_persist(symbol='✓'.encode('utf-8'), text=f"Baking successful!")
+	spinner.succeed(text=f"Baking successful!")
 	return opg
