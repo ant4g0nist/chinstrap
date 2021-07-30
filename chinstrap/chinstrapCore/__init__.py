@@ -227,7 +227,7 @@ class Compile:
 		if not success:
 			spinner.fail(text=f"Compilation of {str(contract)} Failed!")
 			print("\nReason:")
-			print(msg.decode())
+			print(msg)
 			return
 
 		sys.path.append('./contracts/')
@@ -241,11 +241,14 @@ class Compile:
 		"""
 
 		proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		_, stderr = proc.communicate()
+		stdout, stderr = proc.communicate()
 		exit_code = proc.wait()		
 
 		if exit_code:
-			return False, stderr
+			if stderr:
+				return False, stderr.decode()
+			if stdout:
+				return False, stdout.decode()
 
 		return True, ''
 
