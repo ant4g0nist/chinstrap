@@ -59,14 +59,6 @@ cd chinstrap
 python3 setup.py install
 ```
 
-#### Upgrade
-
-if you installed chinstrap with pip3
-
-```bash
-pip3 install -U chinstrap
-```
-
 or using Docker image available at https://hub.docker.com/r/ant4g0nist/chinstrap/tags
 
 ```bash
@@ -81,6 +73,15 @@ cd chinstrap
 export image=chinstrap
 docker build -t $image . --no-cache
 docker run -v /var/run/docker.sock:/var/run/docker.sock --rm -it $image
+```
+
+
+#### Upgrade
+
+if you installed chinstrap with pip3
+
+```bash
+pip3 install -U chinstrap
 ```
 
 ### Usage
