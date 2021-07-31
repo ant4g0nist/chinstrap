@@ -38,25 +38,36 @@ Here are some reasons why I built Chinstrap:
 
 * Python &gt;= 3.7
 * Docker
+* Node.js
 * [Homebrew](https://brew.sh/) needs to be installed.
 
-```text
+```bash
 $ brew tap cuber/homebrew-libsecp256k1
 $ brew install libsodium libsecp256k1 gmp
 ```
 
 #### Installation
 
-```text
+```bash
 $ pip3 install chinstrap
 ```
 
 or
 
-```text
+```bash
 git clone https://github.com/ant4g0nist/chinstrap
 cd chinstrap
 python3 setup.py install
+```
+
+or using Docker
+
+```bash
+git clone https://github.com/ant4g0nist/chinstrap
+cd chinstrap
+export image=chinstrap
+docker build -t $image .
+docker run -v /var/run/docker.sock:/var/run/docker.sock --rm -it $image bash
 ```
 
 #### Upgrade
@@ -155,6 +166,7 @@ $ chinstrap --templates
 
 ## TODO
 
+* [ ] Provide more options in config for Origination (fee, gas_limit, etc.)
 * [ ] Improve documentation
 * [ ] Improve Sandbox support
 * [ ] Improve repl experience

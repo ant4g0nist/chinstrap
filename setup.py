@@ -26,6 +26,7 @@ version = mod.version  # type: ignore
 setup(
     install_requires=[
         "docker>=4.4.4",
+        "pytest>=6.2.4",
         "ptpython>=3.0.19",
         "pytezos>=3.2.6",
         "halo>=0.0.31",
