@@ -1,0 +1,13 @@
+FROM python:3
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt update -y && apt install -y libsodium-dev libsecp256k1-dev libgmp-dev nodejs
+COPY ./ /setup
+WORKDIR /setup
+
+RUN pip3 install .
+
+WORKDIR /home
+
+ENTRYPOINT [ "chinstrap"]
