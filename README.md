@@ -179,6 +179,8 @@ $ chinstrap --templates
 * [ ] Add tests
 * [ ] Add more test projects
 * [ ] Add a homebrew formula
+* [ ] Visual studio code plugin
+* [ ] debug Michelin code
 
 ## References
 

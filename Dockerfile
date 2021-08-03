@@ -7,4 +7,4 @@ RUN pip3 install chinstrap -U
 
 WORKDIR /home
 
-ENTRYPOINT [ "bash" ]
+ENTRYPOINT [ "chinstrap"]

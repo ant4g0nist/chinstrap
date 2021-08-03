@@ -99,13 +99,15 @@ def main():
 
 		elif args.compile:
 			chinstrap = ChinstrapConfig(args.network, compile=True)
-			chinstrapCore.Compile(chinstrap, chinstrapPath=chinstrapPath)
+			status = chinstrapCore.Compile(chinstrap, chinstrapPath=chinstrapPath).status
+			Helpers.hexit(code = status)
 
 		elif args.test:
 			if args.test=='pytest':
-				chinstrapCore.RunTests(chinstrapPath, True)
+				status = chinstrapCore.RunTests(chinstrapPath, True).status
 			else:
-				chinstrapCore.RunTests(chinstrapPath, False)
+				status = chinstrapCore.RunTests(chinstrapPath, False).status
+			Helpers.hexit(code = status)
 
 		elif args.originate:
 			chinstrap = ChinstrapConfig(args.network)

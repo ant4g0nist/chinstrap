@@ -63,9 +63,9 @@ def fatal(msg):
 	print_formatted_text(m)
 	hexit()
 
-def hexit():
+def hexit(code=0):
 	print_formatted_text(HTML(f"Thanks for using <b><ansired>Chinstrap</ansired></b>! Happy Hacking 🙏🏻"))
-	sys.exit()
+	sys.exit(code)
 
 def promptOverwrite(dir):
 	msg = HTML(f"<i><b>{dir}</b></i> already exists in this directory. Should I <b>Overwrite?: </b>")

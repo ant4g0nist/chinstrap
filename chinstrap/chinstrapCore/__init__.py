@@ -191,7 +191,7 @@ class Compile:
 		self.chinstrapPath 	= chinstrapPath
 		self.cwd = os.getcwd()
 		contracts = glob.iglob("contracts/*.py")
-
+		self.status = 0
 		self.initBuildFolder()
 		# self.updateCompiler()
 		
@@ -225,6 +225,7 @@ class Compile:
 		command = [f"{self.chinstrapPath}/chinstrapCore/smartpyCli/SmartPy.sh", "compile", str(contract), f'{self.cwd}/build/contracts/']
 		success, msg = self.runSubprocess(command)
 		if not success:
+			self.status = 1
 			spinner.fail(text=f"Compilation of {str(contract)} Failed!")
 			print("\nReason:")
 			print(msg)
@@ -269,6 +270,7 @@ class RunTests:
 		tests = glob.iglob("./tests/*.py")
 		passedTests = []
 		failedTests = []
+		self.status = 0
 
 		for file in tests:
 			msg = HTML(f'Running tests on <ansigreen>{file}</ansigreen>')
@@ -284,7 +286,9 @@ class RunTests:
 
 				else:
 					print_formatted_text(msg)
-					pytest.main(["--no-header", f'{file}'])
+					res = pytest.main(["--no-header", f'{file}'])
+					if res.value:
+						self.status = 1
 
 			else:
 				print_formatted_text(msg)
@@ -293,6 +297,7 @@ class RunTests:
 				if passed:
 					passedTests.append(file)			
 				else:
+					self.status = 1
 					failedTests.append(file)
 
 		print()
