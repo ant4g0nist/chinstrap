@@ -25,5 +25,10 @@ $ chinstrap --sandbox-stop
 
 ![sandbox-demo](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/sandbox.gif)
 
-## 
+To start the sandbox using `ant4g0nist/chinstrap` docker image:
 
+```bash
+docker run -v /var/run/docker.sock:/var/run/docker.sock --rm -it ant4g0nist/chinstrap --sandbox
+```
+
+Although it is possible to start sandbox from inside the Chinstrap container with the above command, it is not suggested as mounting `docker.sock` is considered to be security risk.

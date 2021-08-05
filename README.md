@@ -64,7 +64,7 @@ or using Docker image available at https://hub.docker.com/r/ant4g0nist/chinstrap
 
 ```bash
 docker pull ant4g0nist/chinstrap
-docker run -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/home --rm -it ant4g0nist/chinstrap
+docker run -v `pwd`:/home --rm -it ant4g0nist/chinstrap
 ```
 
 or using Dockerfile from the repo
@@ -74,10 +74,10 @@ git clone https://github.com/ant4g0nist/chinstrap
 cd chinstrap
 export image=chinstrap
 docker build -f dockerfiles/Dockerfile.local -t $image .
-docker run -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/home --rm -it $image
+docker run -v `pwd`:/home --rm -it $image
 ```
 
-Note: For using docker, the Chinstrap proejct directory needs to be shared with the Docker.
+Note: For using docker, the Chinstrap project directory needs to be shared with the Docker.
 
 #### Upgrade
 
