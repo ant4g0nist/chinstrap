@@ -26,7 +26,7 @@ def main():
 	parser.add_argument("--originate", action='store_true', help="Run originations to deploy contracts", required=False)
 	parser.add_argument("--reset", default=False, action='store_true', help="Run originations to deploy contracts", required=False)
 	parser.add_argument("--network", default='development', help="Show addresses for deployed contracts on each network", required=False)
-	parser.add_argument("--test", default='pytest', help="Run [smartpy] or [pytest] tests. ", required=False)
+	parser.add_argument("--test", default=None, help="Run [smartpy] or [pytest] tests. ", required=False)
 	parser.add_argument("--sandbox", action='store_true', help="Start a Tezos local sandbox", required=False)
 	parser.add_argument("--sandbox-stop", action='store_true',  help="Tezos local sandbox's RPC Port", required=False)
 	parser.add_argument("--sandbox-detach", default=False,  action='store_true', help="Start a Tezos local sandbox and detach", required=False)
