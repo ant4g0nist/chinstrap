@@ -187,7 +187,7 @@ $ chinstrap --templates
 
 ## References
 
-* [https://smartpy.io/reference.html](https://smartpy.io/reference.html)
+* [https://smartpy.io/docs](https://smartpy.io/docs)
 * [https://pytezos.org/](https://pytezos.org/)
 * [https://baking-bad.org/](https://baking-bad.org/)
 * [https://michelson.baking-bad.org/](https://michelson.baking-bad.org/)
