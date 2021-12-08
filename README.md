@@ -192,6 +192,9 @@ $ chinstrap --templates
 * [https://baking-bad.org/](https://baking-bad.org/)
 * [https://michelson.baking-bad.org/](https://michelson.baking-bad.org/)
 
+## Contact
+Telegram chat: https://t.me/chinstrap_io
+
 ## Credits
 
 * Truffle
