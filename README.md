@@ -90,44 +90,34 @@ pip3 install -U chinstrap
 ### Usage
 
 ```bash
-$ chinstrap          
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.0.16›
+╰─➤  chinstrap
 
-      _     _           _                   
-  ___| |__ (_)_ __  ___| |_ _ __ __ _ _ __  
- / __| '_ \| | '_ \/ __| __| '__/ _` | '_ \ 
+      _     _           _
+  ___| |__ (_)_ __  ___| |_ _ __ __ _ _ __
+ / __| '_ \| | '_ \/ __| __| '__/ _` | '_ \
 | (__| | | | | | | \__ \ |_| | | (_| | |_) |
- \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/ 
-                                     |_|    
+ \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/
+                                     |_|
 
-
-usage: main.py [-h] [--init] [--compile] [--create] [--debug] [--templates] [--develop] [--originate] [--reset] [--network NETWORK] [--test TEST] [--sandbox] [--sandbox-stop] [--sandbox-detach]
-               [--sandbox-port SANDBOX_PORT] [--sandbox-protocol SANDBOX_PROTOCOL] [--accounts ACCOUNTS] [--account-balance ACCOUNT_BALANCE] [--version]
+usage: chinstrap [-h] {init,config,networks,compile,install,create,templates,test,sandbox} ...
 
 Chinstrap - a cute framework for developing Tezos Smart Contracts
 
+positional arguments:
+  {init,config,networks,compile,install,create,templates,test,sandbox}
+    init                Initialize a new Chinstrap project
+    config              Verify Chinstrap configuration
+    networks            List currently available test networks
+    compile             Compile contract source files
+    install             Helper to install compilers
+    create              Helper to create new contracts, originations and tests
+    templates           Download templates provided by SmartPy
+    test                Run pytest/smartpy/ligo tests
+    sandbox             Start a Tezos local sandbox
+
 optional arguments:
   -h, --help            show this help message and exit
-  --init                Initialize new and empty Tezos SmartPy project
-  --compile             Compile contract source files
-  --create              Helper to create new contracts, origination and tests
-  --debug               Interactively debug contracts.
-  --templates           Download from templates provided SmartPy
-  --develop             Open a console with a local development blockchain
-  --originate           Run originations to deploy contracts
-  --reset               Run originations to deploy contracts
-  --network NETWORK     Show addresses for deployed contracts on each network
-  --test TEST           Run [smartpy] or [pytest] tests.
-  --sandbox             Start a Tezos local sandbox
-  --sandbox-stop        Tezos local sandbox's RPC Port
-  --sandbox-detach      Start a Tezos local sandbox and detach
-  --sandbox-port SANDBOX_PORT
-                        Tezos local sandbox's RPC Port
-  --sandbox-protocol SANDBOX_PROTOCOL
-                        Tezos local sandbox's RPC Port
-  --accounts ACCOUNTS   Number of accounts to bootstrap on Tezos local sandbox
-  --account-balance ACCOUNT_BALANCE
-                        Amount of Tezos to deposit while bootstraping on Tezos local sandbox
-  --version             Show version number and exit
 ```
 
 ### Quickstart
@@ -135,37 +125,66 @@ optional arguments:
 To compile the smart contracts:
 
 ```bash
-$ chinstrap --compile
+$ chinstrap compile
 ```
 
-To originate \(deploy\) the smart contracts:
+For Flextesa sandbox:
 
 ```bash
-$ chinstrap --originate --network florencenet
-```
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.0.16›
+╰─➤  chinstrap sandbox -h
 
-To re-originate \(reset and deploy again\) the smart contracts:
+      _     _           _
+  ___| |__ (_)_ __  ___| |_ _ __ __ _ _ __
+ / __| '_ \| | '_ \/ __| __| '__/ _` | '_ \
+| (__| | | | | | | \__ \ |_| | | (_| | |_) |
+ \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/
+                                     |_|
 
-```bash
-$ chinstrap --originate --network florencenet --reset
-```
+usage: chinstrap sandbox [-h] [-o PORT] [-i] [-d] [-s] [-c NUM_OF_ACCOUNTS] [-m MINIMUM_BALANCE] [-p {Hangzhou,Ithaca,Alpha}]
 
-To start the local Flextesa sandbox:
-
-```bash
-$ chinstrap --sandbox
-```
-
-To start the chinstrap repl \(debug\):
-
-```bash
-$ chinstrap --debug --network florencenet
+optional arguments:
+  -h, --help            show this help message and exit
+  -o PORT, --port PORT  Tezos local sandbox's RPC Port
+  -i, --initialize      Initialize Tezos sandbox
+  -d, --detach          Start the Tezos sandbox and detach
+  -s, --stop            Stop the currently running Tezos sandbox
+  -c NUM_OF_ACCOUNTS, --num-of-accounts NUM_OF_ACCOUNTS
+                        Number of accounts to bootstrap on Tezos sandbox
+  -m MINIMUM_BALANCE, --minimum-balance MINIMUM_BALANCE
+                        Amount of Tezos to deposit while bootstraping on Tezos local sandbox
+  -p {Hangzhou,Ithaca,Alpha}, --protocol {Hangzhou,Ithaca,Alpha}
+                        Protocol to start Tezos sandbox with.
 ```
 
 To download template contracts provided Smartpy:
 
 ```bash
-$ chinstrap --templates
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.0.16›
+╰─➤  chinstrap templates
+```
+
+To run tests:
+
+```bash
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.0.16›
+╰─➤  chinstrap test
+```
+
+To check configuration:
+
+```bash
+╰─➤  chinstrap config
+
+      _     _           _
+  ___| |__ (_)_ __  ___| |_ _ __ __ _ _ __
+ / __| '_ \| | '_ \/ __| __| '__/ _` | '_ \
+| (__| | | | | | | \__ \ |_| | | (_| | |_) |
+ \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/
+                                     |_|
+
+Using development network
+Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 ```
 
 ### Is Chinstrap finished?
