@@ -175,15 +175,15 @@ $ chinstrap --templates
 
 ## TODO
 
-* [ ] Provide more options in config for Origination (fee, gas_limit, etc.)
-* [ ] Improve documentation
-* [ ] Improve Sandbox support
-* [ ] Improve repl experience
-* [ ] Add tests
-* [ ] Add more test projects
-* [ ] Add a homebrew formula
+* [x] Add Ligo support for compilation and tests
+* [ ] Add repl
+* [ ] Add Ligo/SmartPy templates
+* [ ] Improve Sandbox integrations in repl
+* [ ] Update documentation to support v0.0.16
 * [ ] Visual studio code plugin
-* [ ] debug Michelin code
+* [ ] Add unit tests for chinstrap
+* [ ] Add a homebrew formula
+* [ ] Provide more options in config for Origination (fee, gas_limit, etc.)
 
 ## References
 
