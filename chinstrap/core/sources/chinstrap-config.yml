@@ -1,0 +1,33 @@
+chinstrap:
+# Networks define how you connect to your Tezos apis.
+  network:
+    development:
+      host: http://localhost
+      port: 8732
+      
+      # You need to configure accounts with private key,
+      # to sign your transactions before they're sent to a remote public node
+      accounts:
+        - privateKeyFile: ./.private.tz
+
+  # hangzhounet:
+  #   host: https://hangzhounet.smartpy.io/
+  #   port: 443
+  #   accounts:
+  #     - privateKeyFile: ./.priv.tz
+
+  # ithacanet:
+  #  host: https://ithacanet.smartpy.io/
+  #  port: 443
+
+  # mainnet:
+  #   host: https://mainnet.smartpy.io
+  #   port: 443
+
+  compiler:
+    # Compiler configuration
+    # lang: smartpy, cameligo, pascaligo, reasonligo, jsligo
+    lang: smartpy
+
+    # test: smartpy, pytest, smartpy, cameligo, pascaligo, reasonligo, jsligo
+    test: smartpy

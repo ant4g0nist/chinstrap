@@ -1,0 +1,5 @@
+FROM alpine:3.15
+RUN apk add nodejs npm bash curl python3
+RUN /bin/bash -c "sh <(curl -s https://smartpy.io/cli/install.sh) --prefix ~/smartpy-cli --yes "
+RUN /bin/bash -c "chmod +x ~/smartpy-cli/SmartPy.sh"
+ENTRYPOINT [ "/root/smartpy-cli/SmartPy.sh" ]
