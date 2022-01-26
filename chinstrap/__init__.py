@@ -1,17 +1,20 @@
 import os
+import rich
 import logging
 import argparse
 import requests
+from rich import pretty
 from pathlib import Path
 from chinstrap import Helpers
 from chinstrap.core.tests import Tests
 from chinstrap.core.config import Config
 from chinstrap.core.create import Create
+from chinstrap.core.repl import launchRepl
+from chinstrap.core.sandbox import Sandbox
 from chinstrap.core.smartpy import SmartPy
 from chinstrap.core.compiler import Compiler
 from chinstrap.core.compiler import Compilers
 from chinstrap.core.create import CreateOptions
-from chinstrap.core.sandbox import Sandbox
 from chinstrap.core.sandbox import SandboxProtocols
 from chinstrap.core.initialize import InitChinstrap
 from chinstrap.core.compiler import installCompiler
@@ -80,10 +83,17 @@ def chinstrapSandboxHandler(args, _):
         
     sandbox.run()
 
+def chinstrapDevelopmentRepl(args, env):
+    sandbox = Sandbox(args)
+    
+    # sandbox.run(detach=True)
+    launchRepl()
+
 def main(args, env=os.environ):
 
+    pretty.install()
     Helpers.welcome_banner()
-    parser = argparse.ArgumentParser(description='Chinstrap - a cute framework for developing Tezos Smart Contracts')
+    parser = argparse.ArgumentParser(description=rich.print(f"[bold green]Chinstrap - a cute framework for developing Tezos Smart Contracts[/bold green]!", ":penguin:"))
     subparsers = parser.add_subparsers()
 
     parser_a = subparsers.add_parser('init', help='Initialize a new Chinstrap project')
@@ -132,6 +142,15 @@ def main(args, env=os.environ):
     parser_i.add_argument('-m', '--minimum-balance', default=20_000, type=int, help="Amount of Tezos to deposit while bootstraping on Tezos local sandbox")
     parser_i.add_argument('-p', '--protocol', type=SandboxProtocols, default=SandboxProtocols.hangzhou, choices=list(SandboxProtocols), help="Protocol to start Tezos sandbox with.")
     parser_i.set_defaults(func=chinstrapSandboxHandler)
+
+    parser_j = subparsers.add_parser('develop', help='Open a console with a local Flextesa development environment')
+    parser_j.add_argument('-o', '--port', default=20000, help="Tezos local sandbox's RPC Port")
+    parser_j.add_argument('-i', '--initialize', default=False, action="store_true", help="Initialize Tezos sandbox")
+    parser_j.add_argument('-s', '--stop', default=False, action="store_true", help="Stop the currently running Tezos sandbox")
+    parser_j.add_argument('-c', '--num-of-accounts', default=10, type=int, help="Number of accounts to bootstrap on Tezos sandbox")
+    parser_j.add_argument('-m', '--minimum-balance', default=20_000, type=int, help="Amount of Tezos to deposit while bootstraping on Tezos local sandbox")
+    parser_j.add_argument('-p', '--protocol', type=SandboxProtocols, default=SandboxProtocols.hangzhou, choices=list(SandboxProtocols), help="Protocol to start Tezos sandbox with.")
+    parser_j.set_defaults(func=chinstrapDevelopmentRepl)
 
     if not args[1:]:
         parser.print_help()

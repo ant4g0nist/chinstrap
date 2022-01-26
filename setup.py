@@ -31,6 +31,7 @@ setup(
         "pytezos>=3.3.4",
         "halo>=0.0.31",
         "python-gitlab>=3.1.0",
+        "rich>=11.0.0"
     ],
     license="MIT License",
     name="chinstrap",

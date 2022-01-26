@@ -1,15 +1,24 @@
 import halo
+import rich
 import json
 import docker
 import pathlib
 from enum import Enum
 from chinstrap import Helpers
 from chinstrap.Helpers import ensureCurrentDirectoryIsChinstrapProject, fatal
-from chinstrap.core.container import getDockerClient, pullImage
+from chinstrap.core.container import getDockerClient, pullImage, runCommandInAlreadyRunningContainer
 from chinstrap.core.container import runCommandInContainer
 
 FlextesaImage = "oxheadalpha/flextesa"
 FlextesaImageTag = "latest"
+
+CryptoNames = ["Alice", "Bob", "Carol", "Chuck", "Craig", "Dan", "Dave", "David", "Erin", "Eve", "Faythe", "Frank", "Grace", "Heidi", "Judy", "Mallory", "Michael", "Mike", "Niaj", "Olivia", "Oscar", "Peggy", "Pat", "Sybil", "Trent", "Ted", "Trudy", "Victor", "Vanna", "Walter", "Wendy"]
+
+def giveMeAName(index):
+    if index < len(CryptoNames):
+        return CryptoNames[index]
+    else:
+        return f"account_{index}"
 
 class SandboxProtocols(Enum):
     hangzhou    = "Hangzhou"
@@ -35,9 +44,9 @@ class Sandbox:
         
         spinner.succeed("Flextesa sandbox ready to use")
 
-    def run(self):
+    def run(self, detach=False):
         self.generateAccounts()
-        self.launchSandbox()
+        self.launchSandbox(detach)
 
     def halt(self):
         ensureCurrentDirectoryIsChinstrapProject()
@@ -58,43 +67,51 @@ class Sandbox:
                 self.container.remove(force=True)
             except Exception as e:
                 print(e)
-        
+        else:
+            spinner.fail("Please run the command form inside Chinstrap project")
+            return 1
         spinner.succeed("Halted the sandbox")
 
+    def generateAccount(self, index=0):
+        name = giveMeAName(index)
+        cmd = f"flextesa key {name}"
+        container = runInFlextesaContainerCli(cmd, detach=False)
+
+        for line in container.logs(stream=True):
+            line = line.decode('utf-8').rstrip()
+            name = line.split(",")[0]
+            privateKey = line.split(",")[-1]
+
+        container.remove()
+
+        return name, privateKey, line
+                    
     def generateAccounts(self):
-        
         spinner = halo.Halo(text=f'Creating {self.args.num_of_accounts} accounts...', spinner="dots")
         spinner.start()
         
         self.accounts = [ ]
 
         for i in range(self.args.num_of_accounts):
-            cmd = f"flextesa key {i}"
-            container = runInFlextesaContainer(cmd, detach=False)
-            for line in container.logs(stream=True):
-                account = line.decode('utf-8').rstrip()
-                self.accounts.append(f"{account}@{self.args.minimum_balance*1_000_000}")
-
-            container.remove()
+            name, privateKey, account = self.generateAccount(i)
+            self.accounts.append(f"{account}")
 
         spinner.succeed( text=f"Accounts created!\n")
 
-        print(f'\nid {"":16} address {"":32} publicKey {"":46} privateKey')
+        print(f'\nid {"":32} address {"":32} publicKey {"":46} privateKey')
         for account in self.accounts:
             name, publicKeyHash, address, privateKey = account.split(",")
-            print(f" {Helpers.RED}{name: <4}{Helpers.RST}{address:36} {Helpers.GRN}{publicKeyHash}{Helpers.RST} {Helpers.YEL}{privateKey.replace('unencrypted:','').split('@')[0]}{Helpers.RST}")
+            print(f" {Helpers.RED}{name: <16}{Helpers.RST}{address:36} {Helpers.GRN}{publicKeyHash}{Helpers.RST} {Helpers.YEL}{privateKey.replace('unencrypted:','').split('@')[0]}{Helpers.RST}")
             self.state['accounts'][name] = {'address':address, 'private':privateKey.replace('unencrypted:','').split('@')[0]}
 
-    def launchSandbox(self):
+    def launchSandbox(self, detach=False):
         spinner = halo.Halo(text=f"Starting sandbox", spinner="dots")
         spinner.start()
         
         command = f'''flextesa mini-net --root "/tmp/mini-box" --size 1 --set-history-mode N000:archive --number-of-b 5 --time-b 5 --until-level 200_000_000 --protocol-kind {self.args.protocol.value} --keep-root '''
-        for account in self.accounts:
-            command += f' --add-bootstrap-account="{account}" --no-daemons-for={account.split(",")[0]} '
 
         client = getDockerClient()
-
+        
         self.container = client.containers.create(image=f'{FlextesaImage}:{FlextesaImageTag}', command=command, detach=self.args.detach, auto_remove=False, ports={'20000': self.args.port})
         self.container.start()
 
@@ -106,19 +123,33 @@ class Sandbox:
         spinner.succeed( text=f"Sandbox up and running!\n")
 
         self.started = False
-        if not self.args.detach:
-            print("*"*20)
-            for line in self.container.logs(stream=True):
-                op = line.decode('utf-8').rstrip()
-                # if develop and 'Network started' in op:
-                #     self.started = True
-                #     return
-                print(op)
-                # if not develop:
-                #     print(op)
-                    
+        print("*"*20)
+        for line in self.container.logs(stream=True):
+            op = line.decode('utf-8').rstrip()
+            if 'Network started' in op:
+                for account in self.accounts:
+                    name        = account.split(",")[0]
+                    privateKey  = account.split(",")[-1]
+                    cmd = f"import secret key {name} {privateKey}"
+                    runTezosClient(cmd, self.container)
 
-def runInFlextesaContainer(command, detach=True):
+                    if detach:
+                        break
+
+            rich.print(op)
+
+def runTezosClient(command, container):
+    # tezos-client
+    # try:
+    command = f"tezos-client {command}"
+    return runCommandInAlreadyRunningContainer(container, command)
+    # except docker.errors.ImageNotFound:
+    #     fatal('\nContainer not running')
+
+    # except docker.errors.NotFound:
+    #     fatal("docker.errors.NotFound")
+
+def runInFlextesaContainerCli(command, detach=True):
     try:
         return runCommandInContainer(FlextesaImage, FlextesaImageTag, command, [], detach, {}, False)
     except docker.errors.ImageNotFound:

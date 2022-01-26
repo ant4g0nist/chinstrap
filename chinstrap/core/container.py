@@ -67,3 +67,9 @@ def runCommandInContainer(image, tag, command, files_to_add = [], detach=True, v
 
     container.start()
     return container
+
+def runCommandInAlreadyRunningContainer(container, command):
+    try:
+        return container.exec_run(command)
+    except Exception as e:
+        fatal(e)
