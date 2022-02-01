@@ -4,7 +4,7 @@ chinstrap:
     development:
       host: http://localhost
       port: 8732
-      
+
       # You need to configure accounts with private key,
       # to sign your transactions before they're sent to a remote public node
       accounts:

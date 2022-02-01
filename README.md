@@ -219,4 +219,3 @@ Telegram chat: https://t.me/chinstrap_io
 * Truffle
 * Baking-Bad
 * logo by [@sengar23](https://github.com/sengar23)
-

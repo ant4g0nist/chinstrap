@@ -19,8 +19,8 @@ spec = util.spec_from_file_location(
 
 # noinspection PyUnresolvedReferences
 mod = util.module_from_spec(spec)
-spec.loader.exec_module(mod)  # type: ignore
-version = mod.version  # type: ignore
+spec.loader.exec_module(mod)
+version = mod.version
 
 setup(
     install_requires=[
@@ -31,7 +31,8 @@ setup(
         "pytezos>=3.3.4",
         "halo>=0.0.31",
         "python-gitlab>=3.1.0",
-        "rich>=11.0.0"
+        "rich>=11.0.0",
+        "pre-commit>=2.17.0",
     ],
     license="MIT License",
     name="chinstrap",
@@ -44,26 +45,26 @@ setup(
     scripts=["bin/chinstrap"],
     packages=setuptools.find_packages(),
     package_dir={
-            'chinstrap.core.sources.contracts' : 'chinstrap/core/sources/contracts',
-            'chinstrap.core.sources.originations' : 'chinstrap/core/sources/originations',
-            'chinstrap.core.sources.tests' : 'chinstrap/core/sources/tests'
-            },
-    package_data = {
-                'chinstrap.core.sources.contracts' :['*'],
-                'chinstrap.core.sources.originations' :['*'],
-                'chinstrap.core.sources.tests' :['*'],
-                'chinstrap.core.sources' :['*'],
-                'chinstrap.core.pytezos.contract' :['*.json']
-             },
+        "chinstrap.core.sources.contracts": "chinstrap/core/sources/contracts",
+        "chinstrap.core.sources.originations": "chinstrap/core/sources/originations",
+        "chinstrap.core.sources.tests": "chinstrap/core/sources/tests",
+    },
+    package_data={
+        "chinstrap.core.sources.contracts": ["*"],
+        "chinstrap.core.sources.originations": ["*"],
+        "chinstrap.core.sources.tests": ["*"],
+        "chinstrap.core.sources": ["*"],
+        "chinstrap.core.pytezos.contract": ["*.json"],
+    },
     include_package_data=True,
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[
-        'Environment :: Console',
-        'Intended Audience :: Developers',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Topic :: Software Development :: Build Tools'
-    ]
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Topic :: Software Development :: Build Tools",
+    ],
 )

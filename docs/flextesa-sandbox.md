@@ -1,6 +1,6 @@
 # Flextesa Sandbox
 
-In this section, we will see how to start a local Flextesa sandbox. 
+In this section, we will see how to start a local Flextesa sandbox.
 
 To start the local Flextesa sandbox with 5 bootstrapped accounts:
 

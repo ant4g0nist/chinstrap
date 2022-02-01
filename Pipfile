@@ -12,6 +12,7 @@ pytezos         = ">=6.2.5"
 requests        = ">=2.27.1"
 ptpython        = ">=3.0.20"
 python-gitlab   = ">=3.1.0"
+pre-commit      = ">=2.17.0"
 
 [requires]
 python_version = "3"

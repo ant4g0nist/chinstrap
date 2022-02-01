@@ -34,6 +34,3 @@ accounts()
 getAccountFromKey(key)
 getAccountBalance(address)
 ```
-
-
-
