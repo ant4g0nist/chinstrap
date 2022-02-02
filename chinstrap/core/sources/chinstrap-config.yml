@@ -2,8 +2,7 @@ chinstrap:
 # Networks define how you connect to your Tezos apis.
   network:
     development:
-      host: http://localhost
-      port: 8732
+      host: http://localhost:20000
 
       # You need to configure accounts with private key,
       # to sign your transactions before they're sent to a remote public node
@@ -11,18 +10,15 @@ chinstrap:
         - privateKeyFile: ./.private.tz
 
   # hangzhounet:
-  #   host: https://hangzhounet.smartpy.io/
-  #   port: 443
+  #   host: https://hangzhounet.smartpy.io:443
   #   accounts:
   #     - privateKeyFile: ./.priv.tz
 
   # ithacanet:
-  #  host: https://ithacanet.smartpy.io/
-  #  port: 443
+  #  host: https://ithacanet.smartpy.io:443
 
   # mainnet:
-  #   host: https://mainnet.smartpy.io
-  #   port: 443
+  #   host: https://mainnet.smartpy.io:443
 
   compiler:
     # Compiler configuration

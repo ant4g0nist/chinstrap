@@ -5,7 +5,7 @@ import glob
 import pytest
 from pytezos import ContractInterface
 from chinstrap.core import ligo, smartpy
-from chinstrap.Helpers import ensureCurrentDirectoryIsChinstrapProject, fatal
+from chinstrap.Helpers import ensureCurrentDirectoryIsChinstrapProject
 
 
 class Tests:

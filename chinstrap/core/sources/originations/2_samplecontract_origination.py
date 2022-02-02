@@ -1,4 +1,4 @@
-from chinstrap.chinstrapCore import getContract
+from chinstrap.core.originations import getContract
 
 
 def deploy(chinstrapState, network, accounts):

@@ -42,8 +42,6 @@ class Config:
             if self.network.accounts:
                 self.loadAccounts()
 
-            return
-
     def loadAccounts(self):
         self.accounts = []
         try:
@@ -76,7 +74,7 @@ class Config:
 
         Helpers.printFormatted(
             f"""Loaded wallet <ansiyellow><b>{wallet.key.public_key_hash()}</b> \
-            </ansiyellow>. Balance: <ansigreen><b>{wallet.balance()}</b></ansigreen>\n"""
+</ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen><b>{wallet.balance()}</b></ansigreen>\n"""
         )
         self.accounts.append(wallet)
 

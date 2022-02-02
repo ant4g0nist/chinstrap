@@ -1,5 +1,4 @@
 import halo
-import rich
 import json
 import docker
 import pathlib
@@ -86,9 +85,9 @@ class Sandbox:
 
         spinner.succeed("Flextesa sandbox ready to use")
 
-    def run(self, detach=False):
+    def run(self):
         self.generateAccounts()
-        self.launchSandbox(detach)
+        self.launchSandbox()
 
     def halt(self):
         ensureCurrentDirectoryIsChinstrapProject()
@@ -155,13 +154,18 @@ class Sandbox:
                 "private": privateKey.replace("unencrypted:", "").split("@")[0],
             }
 
-    def launchSandbox(self, detach=False):
+    def launchSandbox(self):
         spinner = halo.Halo(text="Starting sandbox", spinner="dots")
         spinner.start()
 
         command = f"""flextesa mini-net --root "/tmp/mini-box" --size 1 --set-history-mode N000:archive \
 --number-of-b 5 --time-b 5 --until-level 200_000_000 \
---protocol-kind {self.args.protocol.value} --keep-root """
+--protocol-kind {self.args.protocol.value} --keep-root \
+--balance-of-bootstrap-accounts=tz:2_000_000.42 """
+
+        for account in self.accounts:
+            command += f' --add-bootstrap-account="{account}"@{self.args.minimum_balance*1_000_000} \
+--no-daemons-for={account.split(",")[0]} '
 
         client = getDockerClient()
 
@@ -179,35 +183,25 @@ class Sandbox:
         with open("build/chinstrap_sandbox_state", "w") as f:
             f.write(json.dumps(self.state))
 
-        spinner.succeed(text="Sandbox up and running!\n")
-
         self.started = False
-        print("*" * 20)
+
         for line in self.container.logs(stream=True):
             op = line.decode("utf-8").rstrip()
-            if "Network started" in op:
-                for account in self.accounts:
-                    name = account.split(",")[0]
-                    privateKey = account.split(",")[-1]
-                    cmd = f"import secret key {name} {privateKey}"
-                    runTezosClient(cmd, self.container)
-
-                    if detach:
-                        break
-
-            rich.print(op)
+            level = op.split("attempt ")[-1].split("/")[0]
+            if "attempt " in op:
+                spinner.text = f"Flextesa: {op}"
+                if int(level) >= 20 and not self.started:
+                    spinner.succeed(
+                        text=f"Sandbox is at level: {level} and ready for use!\n"
+                    )
+                    self.started = True
+                    break
 
 
 def runTezosClient(command, container):
     # tezos-client
-    # try:
     command = f"tezos-client {command}"
     return runCommandInAlreadyRunningContainer(container, command)
-    # except docker.errors.ImageNotFound:
-    #     fatal('\nContainer not running')
-
-    # except docker.errors.NotFound:
-    #     fatal("docker.errors.NotFound")
 
 
 def runInFlextesaContainerCli(command, detach=True):

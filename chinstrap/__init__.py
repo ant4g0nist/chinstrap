@@ -18,6 +18,7 @@ from chinstrap.core.create import CreateOptions
 from chinstrap.core.sandbox import SandboxProtocols
 from chinstrap.core.initialize import InitChinstrap
 from chinstrap.core.compiler import installCompiler
+from chinstrap.core.originations import Originations
 
 logging.getLogger().setLevel(logging.CRITICAL)
 
@@ -90,9 +91,29 @@ def chinstrapSandboxHandler(args, _):
     sandbox.run()
 
 
+def chinstrapRunOriginations(args, env):
+    config = Config(compileFlag=False)
+    originations = Originations(config, args)
+
+    # load state
+    originations.loadOriginationState()
+
+    # compile
+    chinstrapCompileContracts(args, env)
+
+    # get all available originations
+    if args.originate:
+        originations.getOrigination(args.originate)
+    else:
+        originations.getOriginations()
+
+    originations.originateAll()
+    originations.showCosts()
+
+
 def chinstrapDevelopmentRepl(args, env):
     sandbox = Sandbox(args)
-    sandbox.run(detach=True)
+    sandbox.run()
     launchRepl()
 
 
@@ -102,9 +123,9 @@ def main(args, env=os.environ):
     Helpers.welcome_banner()
     parser = argparse.ArgumentParser(
         description=rich.print(
-            "[bold green]Chinstrap - a cute framework for \
-developing Tezos Smart Contracts[/bold green]!",
             ":penguin:",
+            "[bold green]Chinstrap - a cute framework for \
+developing Tezos Smart Contracts[/bold green]!"
         )
     )
     subparsers = parser.add_subparsers()
@@ -311,6 +332,56 @@ Be careful, this will potentioally overwrite files that exist in the directory."
         help="Protocol to start Tezos sandbox with.",
     )
     parser_j.set_defaults(func=chinstrapDevelopmentRepl)
+
+    parser_k = subparsers.add_parser(
+        "originate", help="Run originations and deploy contracts"
+    )
+    parser_k.add_argument(
+        "-o",
+        "--originate",
+        help="Origination script to execute. If not specified, \
+all the originations will be executed",
+    )
+    parser_k.add_argument(
+        "-f",
+        "--number",
+        help="Run contracts from a specific migration. The number \
+refers to the prefix of the migration file.",
+    )
+    parser_k.add_argument(
+        "-n",
+        "--network",
+        default="development",
+        help="Select the configured network",
+    )
+    parser_k.add_argument(
+        "-r",
+        "--reset",
+        default=False,
+        action="store_true",
+        help="Run all originations from the beginning, instead of running \
+from the last completed migration",
+    )
+    parser_k.add_argument(
+        "-c",
+        "--contract",
+        help="Contract to compile. If not specified, all the contracts are compiled",
+    )
+    parser_k.add_argument(
+        "-l",
+        "--local",
+        default=False,
+        action="store_true",
+        help="Use compiler from host machine. If not specified, Docker image is used",
+    )
+    parser_k.add_argument(
+        "-e",
+        "--entrypoint",
+        default="main",
+        type=str,
+        help="Entrypoint to use when compiling Ligo contracts. Default entrypoint is main",
+    )
+    parser_k.set_defaults(func=chinstrapRunOriginations)
 
     if not args[1:]:
         parser.print_help()
