@@ -125,7 +125,7 @@ def main(args, env=os.environ):
         description=rich.print(
             ":penguin:",
             "[bold green]Chinstrap - a cute framework for \
-developing Tezos Smart Contracts[/bold green]!"
+developing Tezos Smart Contracts[/bold green]!",
         )
     )
     subparsers = parser.add_subparsers()

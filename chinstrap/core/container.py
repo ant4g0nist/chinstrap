@@ -2,6 +2,7 @@ import io
 import docker
 import tarfile
 from os.path import split
+from functools import wraps
 from chinstrap.Helpers import fatal
 
 SmartPyImage = "ant4g0nist/smartpy"
@@ -15,6 +16,22 @@ def getDockerClient():
     return docker.from_env()
 
 
+def makeSureDockerIsRunning():
+    def catch(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                docker.from_env().ping()
+                return func(*args, **kwargs)
+            except docker.errors.DockerException:
+                fatal("\nPlease make sure Docker is running!")
+
+        return wrapper
+
+    return catch
+
+
+@makeSureDockerIsRunning()
 def pullImage(image, tag):
     client = getDockerClient()
     try:
@@ -27,6 +44,7 @@ def pullImage(image, tag):
         )
 
 
+@makeSureDockerIsRunning()
 def addFilesToContainer(container, files, location):
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
@@ -43,6 +61,7 @@ def addFilesToContainer(container, files, location):
     )
 
 
+@makeSureDockerIsRunning()
 def runLigoContainer(
     command, files_to_add=[], detach=True, volumes={}, image=LigoImage, tag=LigoImageTag
 ):
@@ -55,6 +74,7 @@ def runLigoContainer(
         )
 
 
+@makeSureDockerIsRunning()
 def runSmartPyContainer(
     command,
     files_to_add=[],
@@ -72,6 +92,7 @@ def runSmartPyContainer(
         )
 
 
+@makeSureDockerIsRunning()
 def runCommandInContainer(
     image, tag, command, files_to_add=[], detach=True, volumes={}, auto_remove=True
 ):
@@ -91,6 +112,7 @@ def runCommandInContainer(
     return container
 
 
+@makeSureDockerIsRunning()
 def runCommandInAlreadyRunningContainer(container, command):
     try:
         return container.exec_run(command)
