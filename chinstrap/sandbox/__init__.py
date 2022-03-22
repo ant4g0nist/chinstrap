@@ -3,14 +3,14 @@ import json
 import docker
 import pathlib
 from enum import Enum
-from chinstrap import Helpers
-from chinstrap.Helpers import ensureCurrentDirectoryIsChinstrapProject, fatal
-from chinstrap.core.container import (
+from chinstrap import helpers
+from chinstrap.helpers import ensureCurrentDirectoryIsChinstrapProject, fatal
+from chinstrap.helpers.container import (
     getDockerClient,
     pullImage,
     runCommandInAlreadyRunningContainer,
 )
-from chinstrap.core.container import runCommandInContainer
+from chinstrap.helpers.container import runCommandInContainer
 
 FlextesaImage = "oxheadalpha/flextesa"
 FlextesaImageTag = "latest"
@@ -145,9 +145,9 @@ class Sandbox:
         for account in self.accounts:
             name, publicKeyHash, address, privateKey = account.split(",")
             print(
-                f" {Helpers.RED}{name: <16}{Helpers.RST}{address:36} \
-{Helpers.GRN}{publicKeyHash}{Helpers.RST} {Helpers.YEL}\
-{privateKey.replace('unencrypted:','').split('@')[0]}{Helpers.RST}"
+                f" {helpers.RED}{name: <16}{helpers.RST}{address:36} \
+{helpers.GRN}{publicKeyHash}{helpers.RST} {helpers.YEL}\
+{privateKey.replace('unencrypted:','').split('@')[0]}{helpers.RST}"
             )
             self.state["accounts"][name] = {
                 "address": address,
@@ -195,8 +195,8 @@ class Sandbox:
                         text=f"Sandbox is at level: {level} and ready for use!\n"
                     )
                     self.started = True
-                    break
-
+                    if self.args.detach:
+                        break
 
 def runTezosClient(command, container):
     # tezos-client

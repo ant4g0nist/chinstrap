@@ -1,8 +1,8 @@
 from enum import Enum
-from chinstrap.core import ligo
-from chinstrap.core import smartpy
-from chinstrap.Helpers import startSpinner
-from chinstrap.Helpers import ensureCurrentDirectoryIsChinstrapProject
+from chinstrap.languages import ligo
+from chinstrap.languages import smartpy
+from chinstrap.helpers import startSpinner
+from chinstrap.helpers import ensureCurrentDirectoryIsChinstrapProject
 
 
 class Compiler:

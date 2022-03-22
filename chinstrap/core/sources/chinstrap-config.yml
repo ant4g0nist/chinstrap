@@ -9,16 +9,20 @@ chinstrap:
       accounts:
         - privateKeyFile: ./.private.tz
 
-  # hangzhounet:
-  #   host: https://hangzhounet.smartpy.io:443
-  #   accounts:
-  #     - privateKeyFile: ./.priv.tz
+    # hangzhounet:
+    #   host: https://hangzhounet.smartpy.io:443
+    #   accounts:
+    #     - privateKeyFile: ./.priv.tz
 
-  # ithacanet:
-  #  host: https://ithacanet.smartpy.io:443
+    # ithacanet:
+    #   host: https://ithacanet.smartpy.io:443
+    #   accounts:
+    #     - privateKeyFile: ./.priv.tz
 
-  # mainnet:
-  #   host: https://mainnet.smartpy.io:443
+    # mainnet:
+    #   host: https://mainnet.smartpy.io:443
+    #   accounts:
+    #     - privateKeyFile: ./.priv.tz
 
   compiler:
     # Compiler configuration

@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sys
 import time
@@ -40,6 +41,7 @@ GRN = "\033[32m"
 RED = "\033[31m"
 RST = "\033[0m"
 YEL = "\033[33m"
+WHT = "\033[37m"
 VERTICAL_LINE = "\u2502"
 HORIZONTAL_LINE = "\u2500"
 
@@ -82,11 +84,13 @@ def debug(msg):
     m = HTML(f"<ansiyellow>{msg}</ansiyellow>\n")
     print_formatted_text(m)
 
+def error(msg):
+    m = HTML(f"<ansired>{msg}</ansired>\n")
+    print_formatted_text(m)
 
 def success(msg):
     m = HTML(f"<ansigreen>{msg}</ansigreen>\n")
     print_formatted_text(m)
-
 
 def fatal(msg):
     m = HTML(f"<ansired>{msg}</ansired>")
@@ -512,3 +516,9 @@ def stopSpinner(spinner, success=True, msg=None):
         return
 
     spinner.fail(text=msg)
+
+
+def calculateHash(msg):
+    sh = hashlib.sha256()
+    sh.update(msg)
+    return sh.hexdigest()

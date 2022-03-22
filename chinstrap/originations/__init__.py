@@ -6,18 +6,26 @@ import time
 import pathlib
 import pytezos
 from halo import Halo
+from pprint import pformat
+from chinstrap import helpers
+from datetime import datetime
 from pytezos import ContractInterface
-from chinstrap.Helpers import fatal, debug, printFormatted
+from chinstrap.helpers import fatal, debug, printFormatted, calculateHash
 
+contractHash = None
 currentContractName = None
 
 
 def getContract(contractName):
+    global contractHash
     global currentContractName
     currentContractName = contractName
-    return ContractInterface.from_file(
-        f"build/contracts/{contractName}/step_000_cont_0_contract.tz"
-    )
+    contractPath = f"build/contracts/{contractName}/step_000_cont_0_contract.tz"
+
+    with open(contractPath) as f:
+        contractHash = calculateHash(f.read().encode())
+
+    return ContractInterface.from_file(contractPath)
 
 
 class Originations:
@@ -44,6 +52,18 @@ class Originations:
 
         self.originations = [file]
 
+    def isAlreadyOriginated(self):
+        """
+        Checks if the current contract is already originated
+        """
+        if (
+            self.config.network.name in self.state.networks
+            and contractHash in self.state.networks[self.config.network.name].keys()
+        ):
+            return self.state.networks[self.config.network.name][contractHash]
+
+        return False
+
     def originate(self, origination):
         origination = pathlib.Path(origination).stem
 
@@ -58,6 +78,14 @@ class Originations:
             storage, contract = orig.deploy(
                 self.state, self.config.network, self.config.accounts
             )
+
+            prevOrigination = self.isAlreadyOriginated()
+            if prevOrigination and not self.args.force:
+                spinner.fail(
+                    f"Contract {currentContractName} is already \
+originated at {prevOrigination['address']} on {prevOrigination['date']}"
+                )
+                fatal("")
 
             res = (
                 self.config.wallet.origination(
@@ -79,21 +107,21 @@ class Originations:
                 "originated_contracts"
             ][0]
             if self.config.network.name in self.state.networks:
-                self.state.networks[self.config.network.name].append(
-                    {
-                        "orignation_hash": txhash,
-                        "address": addr,
-                        "name": currentContractName,
-                    }
-                )
+                self.state.networks[self.config.network.name][contractHash] = {
+                    "orignation_hash": txhash,
+                    "address": addr,
+                    "name": currentContractName,
+                    "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
+                }
             else:
-                self.state.networks[self.config.network.name] = [
-                    {
+                self.state.networks[self.config.network.name] = {
+                    contractHash: {
                         "orignation_hash": txhash,
                         "address": addr,
                         "name": currentContractName,
+                        "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
                     }
-                ]
+                }
 
             printFormatted(
                 f"<ansigreen>✔</ansigreen> <ansired>{currentContractName}</ansired> address: \
@@ -109,7 +137,7 @@ class Originations:
             ):
                 spinner.fail("\nPlease wait for the Sandbox to reach at-least level 20")
             else:
-                spinner.fail(e)
+                spinner.fail(pformat(e))
 
         except Exception as e:
             spinner.fail(e)
@@ -118,6 +146,10 @@ class Originations:
 
     def originateAll(self):
         sys.path.append("originations")
+
+        if len(self.originations) == 0:
+            fatal("No originations found in originations folder")
+
         for origination in self.originations:
             self.originate(origination)
             self.updateCosts()
@@ -155,8 +187,8 @@ class Originations:
 
 class ChinstrapOriginationState:
     def __init__(self, reset) -> None:
-        if reset or not os.path.exists("./build/.state.json"):
-            with open("./build/.state.json", "w") as f:
+        if reset or not os.path.exists("./build/chinstrap_deployments.json"):
+            with open("./build/chinstrap_deployments.json", "w") as f:
                 f.write(
                     """{
   "chinstrap": {
@@ -166,7 +198,7 @@ class ChinstrapOriginationState:
   }
 }"""
                 )
-        with open("./build/.state.json", "r") as f:
+        with open("./build/chinstrap_deployments.json", "r") as f:
             state = json.loads(f.read())
 
         self.networks = state["chinstrap"]["networks"]
@@ -174,5 +206,17 @@ class ChinstrapOriginationState:
     def save(self):
         res = {"chinstrap": {"networks": self.networks}}
 
-        with open("./build/.state.json", "w") as f:
+        with open("./build/chinstrap_deployments.json", "w") as f:
             f.write(json.dumps(res))
+
+    def showOriginations(self, network):
+        if network in self.networks:
+            originations = self.networks[network]
+            print(f'\nNetwork {"":16} Address {"":32} Date {"":36} Tx {"":32} Name ')
+            for _hash, origination in originations.items():
+                # TODO:
+                print(
+                    f"{helpers.YEL}{network:16} {helpers.RED}{origination['address']:32}\
+ {helpers.WHT}{origination['date']:32} \
+{helpers.GRN}{origination['orignation_hash']:46} {helpers.YEL}{origination['name']}{helpers.RST}"
+                )

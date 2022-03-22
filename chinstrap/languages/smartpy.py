@@ -5,15 +5,15 @@ import errno
 import gitlab
 import pathlib
 import subprocess
-from chinstrap import Helpers
+from chinstrap import helpers
 from prompt_toolkit import HTML
-from chinstrap.Helpers import startSpinner
-from chinstrap.Helpers import checkToCreateDir
-from chinstrap.core.container import pullImage, runSmartPyContainer
+from chinstrap.helpers import startSpinner
+from chinstrap.helpers import checkToCreateDir
 from chinstrap.core.templates import contracts
-from chinstrap.Helpers import ensurePathExists
-from chinstrap.Helpers import fatal, runCommand
+from chinstrap.helpers import ensurePathExists
+from chinstrap.helpers import fatal, runCommand
 from prompt_toolkit import print_formatted_text
+from chinstrap.helpers.container import pullImage, runSmartPyContainer
 
 repo = "SmartPy/smartpy"
 image = "ant4g0nist/smartpy"
@@ -205,8 +205,8 @@ class SmartPy:
         return 0
 
     def initBuildFolder(self):
-        Helpers.mkdir("./build")
-        Helpers.mkdir("./build/contracts/")
+        helpers.mkdir("./build")
+        helpers.mkdir("./build/contracts/")
 
     @staticmethod
     def installCompiler(local=False, force=False, spin=None):
@@ -259,7 +259,7 @@ class SmartPyDownloader:
         self.project = self.gl.projects.get(repo)
 
     def displayTemplateCategories(self):
-        prom = Helpers.SelectionPrompt()
+        prom = helpers.SelectionPrompt()
         templateType = prom.prompt(
             HTML("<ansired>Available categories:</ansired>"), options=contracts.keys()
         )
@@ -281,7 +281,7 @@ class SmartPyDownloader:
 
         print()
 
-        prom = Helpers.SelectionPrompt(sideBySide=False)
+        prom = helpers.SelectionPrompt(sideBySide=False)
         contractChoice = prom.prompt(
             HTML("<ansigreen>Available contracts:</ansigreen>"), options=options
         )
@@ -319,6 +319,7 @@ class SmartPyDownloader:
         spinner.start()
 
         localFilePath = "contracts/"
+
         if contract:
             localFilePath += basename
         else:

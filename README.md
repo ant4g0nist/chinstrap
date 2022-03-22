@@ -1,22 +1,33 @@
 # Chinstrap
 
-![Chinstrap](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/logo.png)
+![Chinstrap](docs/images/logo.png)
 
-[![Baked by ant4g0nist](https://img.shields.io/twitter/follow/ant4g0nist?style=social)](https://twitter.com/ant4g0nist) [![docs](https://img.shields.io/badge/docs-passing-brightgreen)](https://docs.chinstrap.io) [![PyPI](https://img.shields.io/pypi/v/chinstrap)](https://pypi.org/project/chinstrap/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/madhuakula/kubernetes-goat/blob/master/LICENSE)
+[![Baked by ant4g0nist](https://img.shields.io/twitter/follow/ant4g0nist?style=social)](https://twitter.com/ant4g0nist)
+[![docs](https://img.shields.io/badge/docs-passing-brightgreen)](https://docs.chinstrap.io)
+[![PyPI](https://img.shields.io/pypi/v/chinstrap)](https://pypi.org/project/chinstrap/)
+
+<h2>Chinstrap is supported by <a href='https://twitter.com/ant4g0nist/status/1498751543520153604?s=20&t=ICSAOjkYsYVNuQDHmkyP7w'>Tezos Foundation Grant</a></h2>
+
+### Community support channels
+- Telegram chat: https://t.me/chinstrap_io
+- Twitter      : https://twitter.com/chinstrap_io
+- Twitter      : https://twitter.com/ant4g0nist
 
 ### Overview
 
-**Chinstrap** is a development environment, testing framework, and asset pipeline focused solely on Tezos, aiming to become Swiss-Army-Knife for Tezos Smart Contract developers.
+**Chinstrap** is a development environment, testing framework, and asset pipeline focused solely on Tezos blockchain, aiming to become Swiss-Army-Knife for Tezos Smart Contract developers.
 
-Chinstrap makes Tezos developers' life easy by providing support for multiple contract compilations, tests, and originations on many public and private Tezos networks.
+Chinstrap makes developers' lives easier by providing support for multiple contract compilations, tests, and origination on many public and private Tezos networks.
 
 ### Features
 
 Chinstrap offers:
 
-* End-to-end build cycle support for Creation, Compilation, Testing and Origination of Smart Contracts
+* End-to-end build cycle support for Creation, Compilation, Testing, and Origination of Smart Contracts
 * Local sandbox environment to develop and test contracts
-* Support for writing tests in `Python` and testing with `pytest`
+* Support for contracts in `SmartPy`, `JsLIGO`, `CameLIGO`, `PascaLIGO`, and `ReasonLIGO`.
+* Support for tests in `Python`(SmartPy/PyTest), `JsLIGO`, `CameLIGO`, `PascaLIGO`, and `ReasonLIGO`.
 * Scriptable deployment & originations framework
 * Originations Management for deploying to many public & private networks
 * Interactive debug console to debug and directly communicate with contracts
@@ -27,10 +38,10 @@ Here are some reasons why I built Chinstrap:
 
 * Development framework that solely focuses on Tezos Smart Contract development
 * Easy to use and everything in place already.
-* Easy maintenance
+* Designed focused solely to support writing contracts in `SmartPy`, `JsLIGO`, `CameLIGO`, `PascaLIGO` and `ReasonLIGO`.
 * Extendable
-* Designed focused solely to support writing contracts in `Python`, `SmartPy`
-* Tests can also be programmed in `Python`
+* Tests can also be programmed in Ligo, `Python`(SmartPy/PyTest) and `JsLIGO`, `CameLIGO`, `PascaLIGO` and `ReasonLIGO`.
+* Easy maintenance
 
 ### Getting started
 
@@ -49,42 +60,9 @@ $ brew install libsodium libsecp256k1 gmp
 #### Installation
 
 ```bash
-$ pip3 install chinstrap
-```
-
-or
-
-```bash
-git clone https://github.com/ant4g0nist/chinstrap
+git clone -b v0.0.16 https://github.com/ant4g0nist/chinstrap
 cd chinstrap
 python3 setup.py install
-```
-
-or using Docker image available at https://hub.docker.com/r/ant4g0nist/chinstrap/tags
-
-```bash
-docker pull ant4g0nist/chinstrap
-docker run -v `pwd`:/home --rm -it ant4g0nist/chinstrap
-```
-
-or using Dockerfile from the repo
-
-```bash
-git clone https://github.com/ant4g0nist/chinstrap
-cd chinstrap
-export image=chinstrap
-docker build -f dockerfiles/Dockerfile.local -t $image .
-docker run -v `pwd`:/home --rm -it $image
-```
-
-Note: For using docker, the Chinstrap project directory needs to be shared with the Docker.
-
-#### Upgrade
-
-if you installed chinstrap with pip3
-
-```bash
-pip3 install -U chinstrap
 ```
 
 ### Usage
@@ -187,22 +165,36 @@ Using development network
 Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 ```
 
-### Is Chinstrap finished?
+## Milestones
+### Milestone 1
+* Support the latest protocol updates of the Tezos protocol on Chinstrap.
+* Support and facilitate the programming of smart contracts and respective tests in Ligo.
 
-* Not at all. I will provide as much support as needed and we can work together and add important changes and improvements on a regular basis.
-* Pull requests are welcome
+### Milestone 2
+* Improve, update, and maintain comprehensive documentation of the platform for relevant stakeholders (e.g. developers and others).
+* Improve the sandbox and REPL (Real-Eval-Print Loop) experience of the platform.
+* Release version 0.0.16 of the platform.
+
+### Milestone 3
+* Provide a Visual Studio Code plugin for origination and tests.
 
 ## TODO
 
-* [x] Add Ligo support for compilation and tests
+* [x] Add `JsLIGO`, `CameLIGO`, `PascaLIGO`, and `ReasonLIGO` support for contracts and tests
+* [x] Remove dependency on migration contract
+* [x] Update Chinstrap to latest protocols
+* [ ] Add TypeScript generation for compiled contracts
+* [x] Add SmartPy templates
+* [ ] Add Ligo templates
 * [ ] Add repl
-* [ ] Add Ligo/SmartPy templates
 * [ ] Improve Sandbox integrations in repl
+* [ ] Create chinstrap.io landing page
 * [ ] Update documentation to support v0.0.16
+* [ ] Release version 0.0.16 of the platform.
 * [ ] Visual studio code plugin
+* [ ] Add support for Jest tests
 * [ ] Add unit tests for chinstrap
 * [ ] Add a homebrew formula
-* [ ] Provide more options in config for Origination (fee, gas_limit, etc.)
 
 ## References
 
@@ -211,11 +203,8 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 * [https://baking-bad.org/](https://baking-bad.org/)
 * [https://michelson.baking-bad.org/](https://michelson.baking-bad.org/)
 
-## Contact
-Telegram chat: https://t.me/chinstrap_io
-
 ## Credits
 
-* Truffle
 * Baking-Bad
-* logo by [@sengar23](https://github.com/sengar23)
+* Tezos Foundation
+* [@sengar23](https://github.com/sengar23)

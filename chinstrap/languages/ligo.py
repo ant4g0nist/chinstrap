@@ -2,9 +2,9 @@ import os
 import glob
 import halo
 import pathlib
-from chinstrap import Helpers
-from chinstrap.core.container import pullImage
-from chinstrap.core.container import runLigoContainer
+from chinstrap import helpers
+from chinstrap.helpers.container import pullImage
+from chinstrap.helpers.container import runLigoContainer
 
 
 class Ligo:
@@ -131,4 +131,4 @@ class Ligo:
         return True, output
 
     def dryRuns(self):
-        Helpers.fatal("Not implemented yet")
+        helpers.fatal("Not implemented yet")

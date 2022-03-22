@@ -5,20 +5,22 @@ import argparse
 import requests
 from rich import pretty
 from pathlib import Path
-from chinstrap import Helpers
-from chinstrap.core.tests import Tests
+from chinstrap import core
+from chinstrap import helpers
+from chinstrap.tests import Tests
+from chinstrap.repl import launchRepl
+from chinstrap.sandbox import Sandbox
+from chinstrap.compiler import Compiler
+from chinstrap.compiler import Compilers
 from chinstrap.core.config import Config
 from chinstrap.core.create import Create
-from chinstrap.core.repl import launchRepl
-from chinstrap.core.sandbox import Sandbox
-from chinstrap.core.smartpy import SmartPy
-from chinstrap.core.compiler import Compiler
-from chinstrap.core.compiler import Compilers
+from chinstrap.compiler import installCompiler
+from chinstrap.sandbox import SandboxProtocols
+from chinstrap.originations import Originations
 from chinstrap.core.create import CreateOptions
-from chinstrap.core.sandbox import SandboxProtocols
+from chinstrap.languages.smartpy import SmartPy
 from chinstrap.core.initialize import InitChinstrap
-from chinstrap.core.compiler import installCompiler
-from chinstrap.core.originations import Originations
+from chinstrap.originations import ChinstrapOriginationState
 
 logging.getLogger().setLevel(logging.CRITICAL)
 
@@ -44,7 +46,7 @@ def listCurrentlyAvailableTestnets(args, _):
     if res.status_code == 200:
         for network, value in res.json().items():
             msg = f"<b>{network:30s}</b> : <u>{value['network_url']}</u>"
-            Helpers.printFormatted(msg)
+            helpers.printFormatted(msg)
 
 
 def chinstrapCompileContracts(args, _):
@@ -92,23 +94,33 @@ def chinstrapSandboxHandler(args, _):
 
 
 def chinstrapRunOriginations(args, env):
-    config = Config(compileFlag=False)
+    config = Config(network=args.network, compileFlag=False)
     originations = Originations(config, args)
 
     # load state
     originations.loadOriginationState()
 
-    # compile
-    chinstrapCompileContracts(args, env)
-
     # get all available originations
-    if args.originate:
+    if args.originate and args.contract:
+        # compile
+        chinstrapCompileContracts(args, env)
         originations.getOrigination(args.originate)
+    elif args.originate and not args.contract:
+        helpers.fatal(
+            "Please provide both --originate(-o) and \
+--contract(-c) args to originate a specific contract"
+        )
     else:
+        chinstrapCompileContracts(args, env)
         originations.getOriginations()
 
     originations.originateAll()
     originations.showCosts()
+
+
+def chinstrapShowOriginations(args, env):
+    state = ChinstrapOriginationState(False)
+    state.showOriginations(args.network)
 
 
 def chinstrapDevelopmentRepl(args, env):
@@ -117,10 +129,15 @@ def chinstrapDevelopmentRepl(args, env):
     launchRepl()
 
 
+def chinstrapAccount(args, env):
+    if args.balance:
+        core.checkAccountBalance(args.account, args.network)
+
+
 def main(args, env=os.environ):
 
     pretty.install()
-    Helpers.welcome_banner()
+    helpers.welcome_banner()
     parser = argparse.ArgumentParser(
         description=rich.print(
             ":penguin:",
@@ -331,6 +348,13 @@ Be careful, this will potentioally overwrite files that exist in the directory."
         choices=list(SandboxProtocols),
         help="Protocol to start Tezos sandbox with.",
     )
+    parser_j.add_argument(
+        "-d",
+        "--detach",
+        default=False,
+        action="store_true",
+        help="Start the Tezos sandbox and detach",
+    )
     parser_j.set_defaults(func=chinstrapDevelopmentRepl)
 
     parser_k = subparsers.add_parser(
@@ -343,7 +367,7 @@ Be careful, this will potentioally overwrite files that exist in the directory."
 all the originations will be executed",
     )
     parser_k.add_argument(
-        "-f",
+        "-s",
         "--number",
         help="Run contracts from a specific migration. The number \
 refers to the prefix of the migration file.",
@@ -381,7 +405,45 @@ from the last completed migration",
         type=str,
         help="Entrypoint to use when compiling Ligo contracts. Default entrypoint is main",
     )
+    parser_k.add_argument(
+        "-f",
+        "--force",
+        default=False,
+        action="store_true",
+        help="Force originate all originations. \
+Be careful, this will re-originate all the contracts even if they are already deployed.",
+    )
     parser_k.set_defaults(func=chinstrapRunOriginations)
+
+    parser_l = subparsers.add_parser(
+        "origination", help="Shows previously originated addresses"
+    )
+
+    parser_l.add_argument(
+        "-n",
+        "--network",
+        default="development",
+        help="Select the configured network",
+    )
+    parser_l.set_defaults(func=chinstrapShowOriginations)
+
+    parser_m = subparsers.add_parser("account", help="Tezos account")
+    parser_m.add_argument(
+        "-b",
+        "--balance",
+        default=False,
+        action="store_true",
+        help="check given account balance",
+    )
+    parser_m.add_argument("-a", "--account", help="tz/KT address")
+    parser_m.add_argument(
+        "-n",
+        "--network",
+        default="development",
+        help="Select the configured network",
+    )
+
+    parser_m.set_defaults(func=chinstrapAccount)
 
     if not args[1:]:
         parser.print_help()

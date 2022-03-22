@@ -1,10 +1,12 @@
+import json
 import yaml
+import pathlib
 from pytezos import pytezos
-from chinstrap import Helpers
+from chinstrap import helpers
 
 # from chinstrap.core.pytezos import pytezos
-from chinstrap.Helpers import convertYamlToObject
-from chinstrap.Helpers import ensureCurrentDirectoryIsChinstrapProject
+from chinstrap.helpers import convertYamlToObject
+from chinstrap.helpers import ensureCurrentDirectoryIsChinstrapProject
 
 
 class Config:
@@ -37,7 +39,7 @@ class Config:
 
         if not compileFlag:
             msg = f"Using <ansiyellow><b>{self.network.name}</b></ansiyellow> network"
-            Helpers.printFormatted(msg)
+            helpers.printFormatted(msg)
 
             if self.network.accounts:
                 self.loadAccounts()
@@ -46,8 +48,7 @@ class Config:
         self.accounts = []
         try:
             keyFile = self.network.accounts[0].privateKeyFile
-            with open(keyFile, "r") as f:
-                self.key = f.read().rstrip("\n")
+            self.key = self.getKeyFromFile(keyFile)
 
             self.wallet = pytezos.using(shell=f"{self.network.host}", key=self.key)
 
@@ -55,24 +56,23 @@ class Config:
                 self.loadPrivateKeyFromFile(i.privateKeyFile)
 
         except Exception as e:
+            helpers.error(f"Exception occured while loading accounts!")
             print(e)
-            Helpers.fatal(f"Exception occured while loading accounts! {e}")
+            helpers.fatal("")
 
     def loadPrivateKeyFromFile(self, keyFile):
-        with open(keyFile, "r") as f:
-            key = f.read().rstrip("\n")
-
+        key = self.getKeyFromFile(keyFile)
         self.loadPrivateKey(key)
 
     def loadPrivateKey(self, key):
         try:
             wallet = pytezos.using(shell=f"{self.network.host}", key=key)
         except pytezos.rpc.node.RpcError:
-            Helpers.fatal(
+            helpers.fatal(
                 f"Failed to connect to {self.network.host}. Try again in sometime!"
             )
 
-        Helpers.printFormatted(
+        helpers.printFormatted(
             f"""Loaded wallet <ansiyellow><b>{wallet.key.public_key_hash()}</b> \
 </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen><b>{wallet.balance()}</b></ansigreen>\n"""
         )
@@ -100,3 +100,15 @@ class Config:
 
         with open("./chinstrap_config.yaml", "w") as f:
             f.write(yaml.safe_dump(config))
+
+    def getKeyFromFile(self, file):
+        if not pathlib.Path(file).exists():
+            helpers.fatal(f"Provided account file {file} missing!")
+
+        with open(file, "r") as f:
+            key = f.read().rstrip("\n")
+
+        try:
+            return json.loads(key)
+        except Exception:
+            return key

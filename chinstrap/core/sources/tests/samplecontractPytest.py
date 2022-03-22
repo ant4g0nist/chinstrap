@@ -1,8 +1,6 @@
 from unittest import TestCase
 from pytezos import MichelsonRuntimeError
-from chinstrap.core.tests import getContractInterface
-
-michelson_contract = "./build/contracts/samplecontract/step_000_cont_0_contract.tz"
+from chinstrap.tests import getContractInterface
 
 owner = "tz1YtuZ4vhzzn7ssCt93Put8U9UJDdvCXci4"
 alice = "tz1LFuHW4Z9zsCwg1cgGTKU12WZAs27ZD14v"

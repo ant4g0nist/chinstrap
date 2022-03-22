@@ -3,7 +3,7 @@ import docker
 import tarfile
 from os.path import split
 from functools import wraps
-from chinstrap.Helpers import fatal
+from chinstrap.helpers import fatal
 
 SmartPyImage = "ant4g0nist/smartpy"
 SmartPyImageTag = "latest"
@@ -23,7 +23,8 @@ def makeSureDockerIsRunning():
             try:
                 docker.from_env().ping()
                 return func(*args, **kwargs)
-            except docker.errors.DockerException:
+            except docker.errors.DockerException as e:
+                print(e)
                 fatal("\nPlease make sure Docker is running!")
 
         return wrapper

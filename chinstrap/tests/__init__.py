@@ -4,8 +4,9 @@ import sys
 import glob
 import pytest
 from pytezos import ContractInterface
-from chinstrap.core import ligo, smartpy
-from chinstrap.Helpers import ensureCurrentDirectoryIsChinstrapProject
+from chinstrap.languages import ligo, smartpy
+from chinstrap.helpers import printFormatted
+from chinstrap.helpers import ensureCurrentDirectoryIsChinstrapProject
 
 
 class Tests:
@@ -20,6 +21,9 @@ class Tests:
             self.compile = ligo.Ligo(args, config, chinstrapPath)
 
     def runAllTests(self):
+        if self.config.compiler.test == "pytest":
+            return runPyTests()
+
         return self.compile.runAllTests()
 
     def runTest(self, test):
@@ -47,7 +51,7 @@ def runSinglePyTest(file):
 
     else:
         msg = f"Running tests on <ansigreen>{file}</ansigreen>"
-        print(msg)
+        printFormatted(msg)
         res = pytest.main(["--no-header", f"{file}"])
         if res.value:
             return 1
