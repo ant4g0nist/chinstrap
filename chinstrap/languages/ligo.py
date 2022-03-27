@@ -1,8 +1,12 @@
 import os
+import re
 import glob
 import halo
 import pathlib
+import requests
 from chinstrap import helpers
+from prompt_toolkit import HTML
+from chinstrap.languages import TemplateOptions
 from chinstrap.helpers.container import pullImage
 from chinstrap.helpers.container import runLigoContainer
 
@@ -10,6 +14,7 @@ from chinstrap.helpers.container import runLigoContainer
 class Ligo:
     def __init__(self, args, config, _) -> None:
         self.config = config
+        self.args = args
         self.entrypoint = args.entrypoint
 
         if self.config.compiler.lang == "jsligo":
@@ -28,6 +33,7 @@ class Ligo:
 
     def compileSources(self):
         contracts = glob.iglob(f"contracts/*.{self.ext}")
+        os.makedirs("build/contracts/", exist_ok=True)
         for contract in contracts:
             self.compileOne(contract, self.entrypoint)
         return self.status
@@ -37,7 +43,10 @@ class Ligo:
         name = path.name
         spinner = halo.Halo(text=f"Compiling {name}", spinner="dots")
         spinner.start()
-        success, msg = self.runCompiler(contract, entrypoint)
+
+        success, msg = Ligo.runCompiler(
+            contract, entrypoint, werror=self.args.werror, warnings=self.args.warning
+        )
         if not success:
             self.status = 1
             spinner.fail(text=f"Compilation of {str(name)} Failed!")
@@ -61,13 +70,36 @@ class Ligo:
             return
         return spin
 
-    def runCompiler(self, contract, entrypoint="main"):
+    @staticmethod
+    def runCompiler(contract, entrypoint="main", werror=False, warnings=False):
         name = pathlib.Path(contract).name
-        command = f"compile contract {name} --entry-point {entrypoint}"
-        container = runLigoContainer(command, [contract])
+        command = f"compile contract {name} "
+
+        if werror:
+            command += " --werror "
+
+        if not warnings:
+            command += " --no-warn "
+
+        command += f"--entry-point {entrypoint}"
+
+        container = runLigoContainer(
+            command,
+            [contract],
+            volumes={
+                f"{os.getcwd()}/contracts/": {"bind": "/contracts/", "mode": "ro"},
+                f"{os.getcwd()}/tests/": {"bind": "/tests/", "mode": "ro"},
+                f"{os.getcwd()}/build/contracts/": {
+                    "bind": "/build/",
+                    "mode": "rw",
+                },
+                f"{os.getcwd()}": {"bind": "/home/", "mode": "ro"},
+            },
+        )
+
         output = ""
 
-        for line in container.logs(stream=True):
+        for line in container.logs(stream=True, stdout=True, stderr=True):
             output += line.decode("utf-8")
 
         error = f'File "{name}"'
@@ -132,3 +164,105 @@ class Ligo:
 
     def dryRuns(self):
         helpers.fatal("Not implemented yet")
+
+    @staticmethod
+    def compileStorage(contract, storage, output, entrypoint="main", werror=False):
+        name = pathlib.Path(contract).name
+        command = f"compile storage {name} '{storage}' -o /contracts/{output} "
+
+        if werror:
+            command += "--werror "
+
+        command += f"--entry-point {entrypoint}"
+        container = runLigoContainer(
+            command,
+            [contract],
+            volumes={
+                f"{ os.getcwd()}/contracts/": {"bind": "/contracts/", "mode": "rw"},
+                f"{os.getcwd()}/tests/": {"bind": "/tests/", "mode": "ro"},
+                f"{os.getcwd()}/build/contracts/": {
+                    "bind": "/build/",
+                    "mode": "rw",
+                },
+                f"{os.getcwd()}": {"bind": "/home/", "mode": "ro"},
+            },
+        )
+
+        output = ""
+
+        for line in container.logs(stream=True):
+            output += line.decode("utf-8")
+
+        error = f'File "{name}"'
+        if error in output[: len(error)]:
+            return False, output
+
+        return True, output
+
+
+class LigoLangTemplates:
+    server = "https://ide.ligolang.org"
+
+    def __init__(self) -> None:
+        pass
+
+    @staticmethod
+    def getExtension(language):
+        if language == TemplateOptions.jsligo:
+            return "jsligo"
+
+        elif language == TemplateOptions.religo:
+            return "religo"
+
+        elif language == TemplateOptions.cameligo:
+            return "mligo"
+
+        elif language == TemplateOptions.pascaligo:
+            return "ligo"
+
+    @staticmethod
+    def listAvailableTemplates(language):
+        url = f"{LigoLangTemplates.server}/static/examples/list"
+        req = requests.get(url)
+        options = {}
+        for i in req.json():
+            if f"({language})" in i["name"]:
+                options[i["name"]] = i["id"]
+        return options
+
+    @staticmethod
+    def templates(language):
+        contracts = LigoLangTemplates.listAvailableTemplates(language)
+        prom = helpers.SelectionPrompt(sideBySide=False)
+        templateType = prom.prompt(
+            HTML("<ansired>Available categories:</ansired>"), options=contracts.keys()
+        )
+
+        templateId = contracts[templateType]
+        LigoLangTemplates.fetchContract(templateId, language)
+
+    @staticmethod
+    def fetchContract(templateId, language):
+        url = f"https://ide.ligolang.org/static/examples/{templateId}"
+
+        req = requests.get(url)
+        resp = req.json()
+
+        code = resp["editor"]["code"]
+        extension = LigoLangTemplates.getExtension(language)
+        deployScript = resp["generateDeployScript"]
+        storage = deployScript["storage"]
+
+        name = resp["name"]
+        name = re.sub("[^a-zA-Z0-9\n]", "_", name)
+
+        contract_file = f"contracts/{name}.{extension}"
+        storage_file = f"contracts/{name}.{extension}.storage"
+
+        with open(contract_file, "w") as f:
+            f.write(code)
+
+        with open(storage_file, "w") as f:
+            if type(storage) == int:
+                storage = f"{storage}"
+            f.write(storage)

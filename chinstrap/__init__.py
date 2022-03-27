@@ -15,11 +15,13 @@ from chinstrap.compiler import Compilers
 from chinstrap.core.config import Config
 from chinstrap.core.create import Create
 from chinstrap.compiler import installCompiler
+from chinstrap.languages import TemplateOptions
 from chinstrap.sandbox import SandboxProtocols
 from chinstrap.originations import Originations
 from chinstrap.core.create import CreateOptions
 from chinstrap.languages.smartpy import SmartPy
 from chinstrap.core.initialize import InitChinstrap
+from chinstrap.languages.ligo import LigoLangTemplates
 from chinstrap.originations import ChinstrapOriginationState
 
 logging.getLogger().setLevel(logging.CRITICAL)
@@ -79,10 +81,21 @@ def chinstrapCreate(args, _):
 
 
 def chinstrapTemplates(args, _):
-    SmartPy.templates()
+    if args.language == TemplateOptions.smartpy:
+        SmartPy.templates()
+
+    else:
+        LigoLangTemplates.templates(args.language)
 
 
 def chinstrapSandboxHandler(args, _):
+    if args.list_accounts:
+        return Sandbox.listAccounts()
+
+    if args.running:
+        Sandbox.isRunning()
+        return
+
     sandbox = Sandbox(args)
     if args.initialize:
         return sandbox.download()
@@ -94,6 +107,12 @@ def chinstrapSandboxHandler(args, _):
 
 
 def chinstrapRunOriginations(args, env):
+
+    if args.show:
+        state = ChinstrapOriginationState(False)
+        state.showOriginations(args.network)
+        return
+
     config = Config(network=args.network, compileFlag=False)
     originations = Originations(config, args)
 
@@ -116,11 +135,6 @@ def chinstrapRunOriginations(args, env):
 
     originations.originateAll()
     originations.showCosts()
-
-
-def chinstrapShowOriginations(args, env):
-    state = ChinstrapOriginationState(False)
-    state.showOriginations(args.network)
 
 
 def chinstrapDevelopmentRepl(args, env):
@@ -183,6 +197,20 @@ Be careful, this will potentioally overwrite files that exist in the directory."
         help="Use compiler from host machine. If not specified, Docker image is used",
     )
     parser_d.add_argument(
+        "-r",
+        "--werror",
+        default=False,
+        action="store_true",
+        help="Treat Ligo compiler warnings as errors",
+    )
+    parser_d.add_argument(
+        "-w",
+        "--warning",
+        default=False,
+        action="store_true",
+        help="Display Ligo compiler warnings",
+    )
+    parser_d.add_argument(
         "-e",
         "--entrypoint",
         default="main",
@@ -233,7 +261,15 @@ Be careful, this will potentioally overwrite files that exist in the directory."
     parser_f.set_defaults(func=chinstrapCreate)
 
     parser_g = subparsers.add_parser(
-        "templates", help="Download templates provided by SmartPy"
+        "templates", help="Download templates provided by SmartPy and *LIGO"
+    )
+    parser_g.add_argument(
+        "-l",
+        "--language",
+        type=TemplateOptions,
+        choices=list(TemplateOptions),
+        required=True,
+        help="The type of the item to create",
     )
     parser_g.set_defaults(func=chinstrapTemplates)
 
@@ -259,7 +295,10 @@ Be careful, this will potentioally overwrite files that exist in the directory."
 
     parser_i = subparsers.add_parser("sandbox", help="Start a Tezos local sandbox")
     parser_i.add_argument(
-        "-o", "--port", default=20000, help="Tezos local sandbox's RPC Port"
+        "-o",
+        "--port",
+        default=20000,
+        help="RPC Port of Tezos local sandbox",
     )
     parser_i.add_argument(
         "-i",
@@ -303,6 +342,21 @@ Be careful, this will potentioally overwrite files that exist in the directory."
         default=SandboxProtocols.hangzhou,
         choices=list(SandboxProtocols),
         help="Protocol to start Tezos sandbox with.",
+    )
+    parser_i.add_argument(
+        "-l",
+        "--list-accounts",
+        default=False,
+        action="store_true",
+        help="List local accounts from sandbox",
+    )
+
+    parser_i.add_argument(
+        "-r",
+        "--running",
+        default=False,
+        action="store_true",
+        help="Stop the currently running Tezos sandbox",
     )
     parser_i.set_defaults(func=chinstrapSandboxHandler)
 
@@ -367,7 +421,7 @@ Be careful, this will potentioally overwrite files that exist in the directory."
 all the originations will be executed",
     )
     parser_k.add_argument(
-        "-s",
+        "-d",
         "--number",
         help="Run contracts from a specific migration. The number \
 refers to the prefix of the migration file.",
@@ -377,6 +431,12 @@ refers to the prefix of the migration file.",
         "--network",
         default="development",
         help="Select the configured network",
+    )
+    parser_k.add_argument(
+        "-p",
+        "--port",
+        default=20000,
+        help="RPC Port of Tezos local sandbox",
     )
     parser_k.add_argument(
         "-r",
@@ -399,6 +459,13 @@ from the last completed migration",
         help="Use compiler from host machine. If not specified, Docker image is used",
     )
     parser_k.add_argument(
+        "-s",
+        "--show",
+        default=False,
+        action="store_true",
+        help="Show addresses of originations",
+    )
+    parser_k.add_argument(
         "-e",
         "--entrypoint",
         default="main",
@@ -414,18 +481,6 @@ from the last completed migration",
 Be careful, this will re-originate all the contracts even if they are already deployed.",
     )
     parser_k.set_defaults(func=chinstrapRunOriginations)
-
-    parser_l = subparsers.add_parser(
-        "origination", help="Shows previously originated addresses"
-    )
-
-    parser_l.add_argument(
-        "-n",
-        "--network",
-        default="development",
-        help="Select the configured network",
-    )
-    parser_l.set_defaults(func=chinstrapShowOriginations)
 
     parser_m = subparsers.add_parser("account", help="Tezos account")
     parser_m.add_argument(

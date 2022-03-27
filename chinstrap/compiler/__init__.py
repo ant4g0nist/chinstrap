@@ -2,13 +2,12 @@ from enum import Enum
 from chinstrap.languages import ligo
 from chinstrap.languages import smartpy
 from chinstrap.helpers import startSpinner
-from chinstrap.helpers import ensureCurrentDirectoryIsChinstrapProject
+from chinstrap.helpers import IsChinstrapProject
 
 
 class Compiler:
+    @IsChinstrapProject()
     def __init__(self, args, config, chinstrapPath) -> None:
-        ensureCurrentDirectoryIsChinstrapProject()
-
         if config.compiler.lang == "smartpy":
             self.compile = smartpy.SmartPy(args, config, chinstrapPath)
 
