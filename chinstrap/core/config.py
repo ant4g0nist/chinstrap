@@ -6,13 +6,12 @@ from chinstrap import helpers
 
 # from chinstrap.core.pytezos import pytezos
 from chinstrap.helpers import convertYamlToObject
-from chinstrap.helpers import ensureCurrentDirectoryIsChinstrapProject
+from chinstrap.helpers import IsChinstrapProject
 
 
 class Config:
+    @IsChinstrapProject()
     def __init__(self, network="development", compileFlag=False) -> None:
-        ensureCurrentDirectoryIsChinstrapProject()
-
         with open("./chinstrap-config.yml", "r") as f:
             confData = yaml.safe_load(f)
             self.config = convertYamlToObject(confData).chinstrap
@@ -56,7 +55,7 @@ class Config:
                 self.loadPrivateKeyFromFile(i.privateKeyFile)
 
         except Exception as e:
-            helpers.error(f"Exception occured while loading accounts!")
+            helpers.error("Exception occurred while loading accounts!")
             print(e)
             helpers.fatal("")
 

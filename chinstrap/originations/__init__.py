@@ -52,7 +52,7 @@ class Originations:
 
         self.originations = [file]
 
-    def isAlreadyOriginated(self):
+    def ensureIsNotOriginated(self, spinner, force):
         """
         Checks if the current contract is already originated
         """
@@ -60,7 +60,21 @@ class Originations:
             self.config.network.name in self.state.networks
             and contractHash in self.state.networks[self.config.network.name].keys()
         ):
-            return self.state.networks[self.config.network.name][contractHash]
+            origination = self.state.networks[self.config.network.name][contractHash]
+            # TODO: check on the network if the address exists
+            try:
+                self.config.wallet.contract(origination["address"])
+                if not force:
+                    spinner.fail(
+                        f"Contract {currentContractName} is already \
+originated at {origination['address']} on {origination['date']}"
+                    )
+                    fatal("")
+
+            except Exception:
+                pass
+
+            return origination
 
         return False
 
@@ -79,13 +93,7 @@ class Originations:
                 self.state, self.config.network, self.config.accounts
             )
 
-            prevOrigination = self.isAlreadyOriginated()
-            if prevOrigination and not self.args.force:
-                spinner.fail(
-                    f"Contract {currentContractName} is already \
-originated at {prevOrigination['address']} on {prevOrigination['date']}"
-                )
-                fatal("")
+            self.ensureIsNotOriginated(spinner, self.args.force)
 
             res = (
                 self.config.wallet.origination(

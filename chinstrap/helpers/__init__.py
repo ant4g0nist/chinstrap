@@ -1,10 +1,11 @@
-import hashlib
 import os
 import sys
+import json
 import time
 import fcntl
 import shutil
 import struct
+import hashlib
 import pytezos
 import termios
 import subprocess
@@ -15,6 +16,7 @@ from typing import Union
 from typing import Optional
 from functools import wraps
 from prompt_toolkit import HTML
+from types import SimpleNamespace
 
 # from chinstrap.core import pytezos
 from prompt_toolkit.styles import Style
@@ -84,18 +86,21 @@ def debug(msg):
     m = HTML(f"<ansiyellow>{msg}</ansiyellow>\n")
     print_formatted_text(m)
 
+
 def error(msg):
     m = HTML(f"<ansired>{msg}</ansired>\n")
     print_formatted_text(m)
+
 
 def success(msg):
     m = HTML(f"<ansigreen>{msg}</ansigreen>\n")
     print_formatted_text(m)
 
+
 def fatal(msg):
     m = HTML(f"<ansired>{msg}</ansired>")
     print_formatted_text(m)
-    hexit()
+    hexit(1)
 
 
 def printFormatted(msg):
@@ -294,8 +299,8 @@ class SelectionPrompt:
                     ),
                 ),
                 Window(
-                    # height=Dimension.exact(self.control.options_count),
-                    content=FormattedTextControl(get_option_text)
+                    height=Dimension.exact(self.control.options_count),
+                    content=FormattedTextControl(get_option_text),
                 ),
                 ConditionalContainer(Window(self.control), filter=~IsDone()),
             ]
@@ -426,12 +431,29 @@ def ensurePathExists(path):
         fatal(f"Please make sure {path} exists")
 
 
-def ensureCurrentDirectoryIsChinstrapProject():
-    if not os.path.exists(".chinstrap"):
-        fatal("Please run the command from inside your project's root folder")
+def IsChinstrapProject():
+    def confirm(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                if not os.path.exists(".chinstrap"):
+                    fatal(
+                        "Please run the command from inside your project's root folder"
+                    )
 
-    if not os.path.exists("chinstrap-config.yml"):
-        fatal("Please run the command from inside your project's root folder")
+                if not os.path.exists("chinstrap-config.yml"):
+                    fatal(
+                        "Please run the command from inside your project's root folder"
+                    )
+
+                return func(*args, **kwargs)
+
+            except Exception as e:
+                debug(e)
+
+        return wrapper
+
+    return confirm
 
 
 class Dict2Object(object):
@@ -522,3 +544,7 @@ def calculateHash(msg):
     sh = hashlib.sha256()
     sh.update(msg)
     return sh.hexdigest()
+
+
+def dictToNamespace(result):
+    return json.loads(json.dumps(result), object_hook=lambda d: SimpleNamespace(**d))

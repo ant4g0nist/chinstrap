@@ -1,5 +1,5 @@
 chinstrap:
-# Networks define how you connect to your Tezos apis.
+# Networks define how Chinstrap connect to Tezos.
   network:
     development:
       host: http://localhost:20000
@@ -7,22 +7,22 @@ chinstrap:
       # You need to configure accounts with private key,
       # to sign your transactions before they're sent to a remote public node
       accounts:
-        - privateKeyFile: ./.private.tz
+        - privateKeyFile: ./.secret
 
     # hangzhounet:
     #   host: https://hangzhounet.smartpy.io:443
     #   accounts:
-    #     - privateKeyFile: ./.priv.tz
+    #     - privateKeyFile: ./.secret
 
     # ithacanet:
     #   host: https://ithacanet.smartpy.io:443
     #   accounts:
-    #     - privateKeyFile: ./.priv.tz
+    #     - privateKeyFile: ./.secret
 
     # mainnet:
     #   host: https://mainnet.smartpy.io:443
     #   accounts:
-    #     - privateKeyFile: ./.priv.tz
+    #     - privateKeyFile: ./.secret
 
   compiler:
     # Compiler configuration

@@ -6,13 +6,13 @@ import pytest
 from pytezos import ContractInterface
 from chinstrap.languages import ligo, smartpy
 from chinstrap.helpers import printFormatted
-from chinstrap.helpers import ensureCurrentDirectoryIsChinstrapProject
+from chinstrap.helpers import IsChinstrapProject
 
 
 class Tests:
+    @IsChinstrapProject()
     def __init__(self, args, config, chinstrapPath) -> None:
         self.config = config
-        ensureCurrentDirectoryIsChinstrapProject()
 
         if config.compiler.lang == "smartpy":
             self.compile = smartpy.SmartPy(args, config, chinstrapPath)
