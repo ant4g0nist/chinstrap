@@ -4,7 +4,7 @@ import docker
 import pathlib
 from enum import Enum
 from chinstrap import helpers
-from chinstrap.helpers import ensureCurrentDirectoryIsChinstrapProject, fatal
+from chinstrap.helpers import IsChinstrapProject, fatal
 from chinstrap.helpers.container import (
     getDockerClient,
     pullImage,
@@ -54,7 +54,7 @@ def giveMeAName(index):
     if index < len(CryptoNames):
         return CryptoNames[index]
     else:
-        return f"account_{index}"
+        return f"{CryptoNames[index%len(CryptoNames)]}{int(index/len(CryptoNames))}"
 
 
 class SandboxProtocols(Enum):
@@ -69,7 +69,7 @@ class SandboxProtocols(Enum):
 class Sandbox:
     def __init__(self, args) -> None:
         self.args = args
-        self.state = {"accounts": {}}
+        self.state = {"accounts": {}, "port": args.port}
 
     def download(self):
         spinner = halo.Halo(
@@ -85,32 +85,97 @@ class Sandbox:
 
         spinner.succeed("Flextesa sandbox ready to use")
 
-    def run(self):
-        self.generateAccounts()
-        self.launchSandbox()
+    @staticmethod
+    @IsChinstrapProject()
+    def dumpSandboxState(state):
+        with open("build/chinstrap_sandbox_state", "w") as f:
+            f.write(json.dumps(state))
 
-    def halt(self):
-        ensureCurrentDirectoryIsChinstrapProject()
-
-        spinner = halo.Halo(text="Halting Tezos sandbox...", spinner="dots")
-        spinner.start()
-
+    @staticmethod
+    @IsChinstrapProject()
+    def getSandboxState(spinner=None):
         path = pathlib.Path("build/chinstrap_sandbox_state")
         if path.exists():
             with open(path, "r") as f:
-                state = json.loads(f.read())
-
-            client = getDockerClient()
-
-            try:
-                containerId = state["containerId"]
-                self.container = client.containers.get(containerId)
-                self.container.remove(force=True)
-            except Exception as e:
-                print(e)
+                return json.loads(f.read())
         else:
             spinner.fail("Please run the command form inside Chinstrap project")
-            return 1
+            fatal("")
+
+    @staticmethod
+    @IsChinstrapProject()
+    def isRunning(port=None):
+        state = Sandbox.getSandboxState()
+        client = getDockerClient()
+        try:
+            statePort = state["port"]
+            containerId = state["containerId"]
+            container = client.containers.get(containerId)
+            if port == statePort:
+                print(
+                    f"Sandbox is already {container.status} \
+on port: {helpers.RED}{port}{helpers.RST}"
+                )
+            else:
+                print(
+                    f"Sandbox is already {container.status} \
+on different port: {helpers.RED}{port}{helpers.RST}"
+                )
+            return True
+
+        except Exception:
+            print(
+                f"Sandbox for current project is \
+{helpers.RED}not{helpers.RST} running"
+            )
+            return False
+
+    @IsChinstrapProject()
+    def run(self):
+        if not Sandbox.isRunning(self.args.port):
+            self.generateAccounts()
+            self.launchSandbox()
+
+    @staticmethod
+    @IsChinstrapProject()
+    def listAccounts():
+        state = Sandbox.getSandboxState()
+        accounts = state["accounts"]
+        title = f'\nname {"":32} address {"":32} publicKey {"":46} privateKey'
+        print("_" * len(title))
+        print(title)
+        print("-" * len(title))
+        for name in accounts:
+            address = accounts[name]["address"]
+            privateKey = accounts[name]["privateKey"]
+            publicKeyHash = accounts[name]["publicKey"]
+            print(
+                f" {helpers.RED}{name: <16}{helpers.RST}{address:36} \
+{helpers.GRN}{publicKeyHash}{helpers.RST} {helpers.YEL}\
+{privateKey}{helpers.RST}"
+            )
+
+        print("_" * len(title))
+
+    @IsChinstrapProject()
+    def halt(self):
+        spinner = halo.Halo(text="Halting Tezos sandbox...", spinner="dots")
+        spinner.start()
+
+        state = Sandbox.getSandboxState(spinner)
+
+        client = getDockerClient()
+
+        try:
+            containerId = state["containerId"]
+            self.container = client.containers.get(containerId)
+            self.container.remove(force=True)
+
+        except Exception as e:
+            print(e)
+
+        state["containerId"] = ""
+        Sandbox.dumpSandboxState(state)
         spinner.succeed("Halted the sandbox")
 
     def generateAccount(self, index=0):
@@ -141,7 +206,11 @@ class Sandbox:
 
         spinner.succeed(text="Accounts created!\n")
 
-        print(f'\nname {"":32} address {"":32} publicKey {"":46} privateKey')
+        title = f'\nname {"":32} address {"":32} publicKey {"":46} privateKey'
+        print("_" * len(title))
+        print(title)
+        print("-" * len(title))
+
         for account in self.accounts:
             name, publicKeyHash, address, privateKey = account.split(",")
             print(
@@ -151,8 +220,11 @@ class Sandbox:
             )
             self.state["accounts"][name] = {
                 "address": address,
-                "private": privateKey.replace("unencrypted:", "").split("@")[0],
+                "publicKey": publicKeyHash,
+                "privateKey": privateKey.replace("unencrypted:", "").split("@")[0],
             }
+
+        print("-" * len(title))
 
     def launchSandbox(self):
         spinner = halo.Halo(text="Starting sandbox", spinner="dots")
@@ -180,8 +252,7 @@ class Sandbox:
 
         self.state["containerId"] = self.container.id
 
-        with open("build/chinstrap_sandbox_state", "w") as f:
-            f.write(json.dumps(self.state))
+        Sandbox.dumpSandboxState(self.state)
 
         self.started = False
 
@@ -197,6 +268,7 @@ class Sandbox:
                     self.started = True
                     if self.args.detach:
                         break
+
 
 def runTezosClient(command, container):
     # tezos-client

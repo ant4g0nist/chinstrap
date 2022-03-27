@@ -119,27 +119,40 @@ For Flextesa sandbox:
  \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/
                                      |_|
 
-usage: chinstrap sandbox [-h] [-o PORT] [-i] [-d] [-s] [-c NUM_OF_ACCOUNTS] [-m MINIMUM_BALANCE] [-p {Hangzhou,Ithaca,Alpha}]
+usage: main.py [-h]
+               {init,config,networks,compile,install,create,templates,test,sandbox,develop,originate,account}
+               ...
+
+positional arguments:
+  {init,config,networks,compile,install,create,templates,test,sandbox,develop,originate,account}
+    init                Initialize a new Chinstrap project
+    config              Verify Chinstrap configuration
+    networks            List currently available test networks
+    compile             Compile contract source files
+    install             Helper to install compilers
+    create              Helper to create new contracts, originations and tests
+    templates           Download templates provided by SmartPy and *LIGO
+    test                Run pytest/smartpy/ligo tests
+    sandbox             Start a Tezos local sandbox
+    develop             Open a console with a local Flextesa development
+                        environment
+    originate           Run originations and deploy contracts
+    account             Tezos account
 
 optional arguments:
   -h, --help            show this help message and exit
-  -o PORT, --port PORT  Tezos local sandbox's RPC Port
-  -i, --initialize      Initialize Tezos sandbox
-  -d, --detach          Start the Tezos sandbox and detach
-  -s, --stop            Stop the currently running Tezos sandbox
-  -c NUM_OF_ACCOUNTS, --num-of-accounts NUM_OF_ACCOUNTS
-                        Number of accounts to bootstrap on Tezos sandbox
-  -m MINIMUM_BALANCE, --minimum-balance MINIMUM_BALANCE
-                        Amount of Tezos to deposit while bootstraping on Tezos local sandbox
-  -p {Hangzhou,Ithaca,Alpha}, --protocol {Hangzhou,Ithaca,Alpha}
-                        Protocol to start Tezos sandbox with.
 ```
 
-To download template contracts provided Smartpy:
+To download template contracts provided Smartpy or LIGO Lang:
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.0.16›
-╰─➤  chinstrap templates
+usage: main.py templates [-h] -l
+                         {JsLIGO,PascaLIGO,CameLIGO,ReasonLIGO,SmartPy}
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l {JsLIGO,PascaLIGO,CameLIGO,ReasonLIGO,SmartPy}, --language {JsLIGO,PascaLIGO,CameLIGO,ReasonLIGO,SmartPy}
+                        The type of the item to create
 ```
 
 To run tests:
@@ -167,32 +180,32 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 
 ## Milestones
 ### Milestone 1
-* Support the latest protocol updates of the Tezos protocol on Chinstrap.
-* Support and facilitate the programming of smart contracts and respective tests in Ligo.
+- [x] Support the latest protocol updates of the Tezos protocol on Chinstrap.
+- [x] Support and facilitate the programming of smart contracts and respective tests in Ligo.
 
 ### Milestone 2
-* Improve, update, and maintain comprehensive documentation of the platform for relevant stakeholders (e.g. developers and others).
-* Improve the sandbox and REPL (Real-Eval-Print Loop) experience of the platform.
-* Release version 0.0.16 of the platform.
+- [ ] Improve, update, and maintain comprehensive documentation of the platform for relevant stakeholders (e.g. developers and others).
+- [ ] Improve the sandbox and REPL (Real-Eval-Print Loop) experience of the platform.
+- [ ] Release version 0.0.16 of the platform.
 
 ### Milestone 3
-* Provide a Visual Studio Code plugin for origination and tests.
+- [ ] Provide a Visual Studio Code plugin for origination and tests.
 
 ## TODO
 
 * [x] Add `JsLIGO`, `CameLIGO`, `PascaLIGO`, and `ReasonLIGO` support for contracts and tests
 * [x] Remove dependency on migration contract
 * [x] Update Chinstrap to latest protocols
-* [ ] Add TypeScript generation for compiled contracts
 * [x] Add SmartPy templates
-* [ ] Add Ligo templates
+* [x] Add Ligo templates
 * [ ] Add repl
 * [ ] Improve Sandbox integrations in repl
+* [ ] Add support for Jest tests
+* [ ] Add TypeScript generation for compiled contracts
 * [ ] Create chinstrap.io landing page
 * [ ] Update documentation to support v0.0.16
 * [ ] Release version 0.0.16 of the platform.
 * [ ] Visual studio code plugin
-* [ ] Add support for Jest tests
 * [ ] Add unit tests for chinstrap
 * [ ] Add a homebrew formula
 
