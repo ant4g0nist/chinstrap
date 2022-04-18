@@ -266,3 +266,5 @@ class LigoLangTemplates:
             if type(storage) == int:
                 storage = f"{storage}"
             f.write(storage)
+
+        print(f"File saved to {helpers.GRN}{contract_file}{helpers.RST}!\n")

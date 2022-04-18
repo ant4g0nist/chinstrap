@@ -92,9 +92,9 @@ def chinstrapSandboxHandler(args, _):
     if args.list_accounts:
         return Sandbox.listAccounts()
 
-    if args.running:
-        Sandbox.isRunning()
-        return
+    # if args.running:
+    #     Sandbox.isRunning()
+    #     return
 
     sandbox = Sandbox(args)
     if args.initialize:
@@ -103,6 +103,7 @@ def chinstrapSandboxHandler(args, _):
     if args.stop:
         return sandbox.halt()
 
+    sandbox.initialize()
     sandbox.run()
 
 
@@ -137,16 +138,13 @@ def chinstrapRunOriginations(args, env):
     originations.showCosts()
 
 
-def chinstrapDevelopmentRepl(args, env):
-    sandbox = Sandbox(args)
-    sandbox.run()
-    launchRepl()
-
+def chinstrapDevelopmentRepl(args, env):    
+    launchRepl(args)
 
 def chinstrapAccount(args, env):
-    if args.balance:
-        core.checkAccountBalance(args.account, args.network)
-
+    # if args.balance:
+    #     core.checkAccountBalance(args.account, args.network)
+    helpers.fatal("TODO")
 
 def main(args, env=os.environ):
 
@@ -350,18 +348,17 @@ Be careful, this will potentioally overwrite files that exist in the directory."
         action="store_true",
         help="List local accounts from sandbox",
     )
-
-    parser_i.add_argument(
-        "-r",
-        "--running",
-        default=False,
-        action="store_true",
-        help="Stop the currently running Tezos sandbox",
-    )
+    # parser_i.add_argument(
+    #     "-r",
+    #     "--running",
+    #     default=False,
+    #     action="store_true",
+    #     help="Stop the currently running Tezos sandbox",
+    # )
     parser_i.set_defaults(func=chinstrapSandboxHandler)
 
     parser_j = subparsers.add_parser(
-        "develop", help="Open a console with a local Flextesa development environment"
+        "develop", help="Open an interactive console for Tezos"
     )
     parser_j.add_argument(
         "-o", "--port", default=20000, help="Tezos local sandbox's RPC Port"
@@ -403,11 +400,10 @@ Be careful, this will potentioally overwrite files that exist in the directory."
         help="Protocol to start Tezos sandbox with.",
     )
     parser_j.add_argument(
-        "-d",
-        "--detach",
-        default=False,
-        action="store_true",
-        help="Start the Tezos sandbox and detach",
+        "-n",
+        "--network",
+        default="development",
+        help="Select the configured network",
     )
     parser_j.set_defaults(func=chinstrapDevelopmentRepl)
 

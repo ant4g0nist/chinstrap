@@ -69,7 +69,9 @@ class SandboxProtocols(Enum):
 class Sandbox:
     def __init__(self, args) -> None:
         self.args = args
-        self.state = {"accounts": {}, "port": args.port}
+    
+    def initialize(self):
+        self.state = {"accounts": {}, "port": self.args.port}
 
     def download(self):
         spinner = halo.Halo(
@@ -99,15 +101,22 @@ class Sandbox:
             with open(path, "r") as f:
                 return json.loads(f.read())
         else:
-            spinner.fail("Please run the command form inside Chinstrap project")
-            fatal("")
+            if spinner:
+                spinner.fail("Please run the command form inside Chinstrap project")
+
+        return False
+
 
     @staticmethod
     @IsChinstrapProject()
     def isRunning(port=None):
         state = Sandbox.getSandboxState()
-        client = getDockerClient()
+
+        if not state:
+            return False
+
         try:
+            client = getDockerClient()
             statePort = state["port"]
             containerId = state["containerId"]
             container = client.containers.get(containerId)
@@ -124,10 +133,6 @@ on different port: {helpers.RED}{port}{helpers.RST}"
             return True
 
         except Exception:
-            print(
-                f"Sandbox for current project is \
-{helpers.RED}not{helpers.RST} running"
-            )
             return False
 
     @IsChinstrapProject()
@@ -205,7 +210,7 @@ on different port: {helpers.RED}{port}{helpers.RST}"
             self.accounts.append(f"{account}")
 
         spinner.succeed(text="Accounts created!\n")
-
+        
         title = f'\nname {"":32} address {"":32} publicKey {"":46} privateKey'
         print("_" * len(title))
         print(title)
@@ -225,7 +230,8 @@ on different port: {helpers.RED}{port}{helpers.RST}"
             }
 
         print("-" * len(title))
-
+        print(f"{helpers.RED}WARNING:{helpers.RST} Please do not use these accounts on mainnet!")
+        
     def launchSandbox(self):
         spinner = halo.Halo(text="Starting sandbox", spinner="dots")
         spinner.start()

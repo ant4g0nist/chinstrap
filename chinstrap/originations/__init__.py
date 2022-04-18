@@ -21,7 +21,7 @@ def getContract(contractName):
     global currentContractName
     currentContractName = contractName
     contractPath = f"build/contracts/{contractName}/step_000_cont_0_contract.tz"
-
+    
     with open(contractPath) as f:
         contractHash = calculateHash(f.read().encode())
 

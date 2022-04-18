@@ -1,6 +1,9 @@
 import os
 from rich import pretty
 from ptpython.repl import embed
+from chinstrap.core import config
+from chinstrap.repl import commands
+from chinstrap.sandbox import Sandbox
 from ptpython.prompt_style import PromptStyle
 from ptpython.layout import CompletionVisualisation
 from prompt_toolkit.formatted_text import AnyFormattedText
@@ -14,10 +17,9 @@ if not os.path.exists(chinstrapRoot):
     with open(historyPath, "w") as f:
         f.write("")
 
-
 def configure(repl):
     # Configuration method. This is called during the start-up of ptpython.
-
+    
     # # Show function signature (bool).
     repl.show_signature = True
 
@@ -116,7 +118,21 @@ def configure(repl):
     repl.confirm_exit = False
 
 
-def launchRepl():
+def launchRepl(args):
     pretty.install()
-    functions = {}
+
+    if args.network == 'development':
+        sandbox = Sandbox(args)
+        sandbox.args.detach = True
+        sandbox.initialize()
+        sandbox.run()
+
+    conf = config.Config(args.network)
+    functions = {
+        'config': conf,
+        'getContract':commands.getContract,
+        'getContractFromFile':commands.getContractFromFile,
+        'stopSandbox':commands.stopSandbox,
+        'exit': commands.cExit
+    }
     embed({}, functions, configure=configure, history_filename=historyPath)
