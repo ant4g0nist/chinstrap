@@ -1,4 +1,5 @@
 import os
+from posixpath import basename
 import re
 import glob
 import halo
@@ -45,7 +46,7 @@ class Ligo:
         spinner.start()
 
         success, msg = Ligo.runCompiler(
-            contract, entrypoint, werror=self.args.werror, warnings=self.args.warning
+            contract, entrypoint, werror=self.args.werror, warnings=self.args.warning, local=self.args.local
         )
         if not success:
             self.status = 1
@@ -71,40 +72,56 @@ class Ligo:
         return spin
 
     @staticmethod
-    def runCompiler(contract, entrypoint="main", werror=False, warnings=False):
+    def runCompiler(contract, entrypoint="main", werror=False, warnings=False, local=False):
         name = pathlib.Path(contract).name
-        command = f"compile contract {name} "
+        
+        options = f""
 
         if werror:
-            command += " --werror "
+            options += " --werror "
 
         if not warnings:
-            command += " --no-warn "
+            options += " --no-warn "
 
-        command += f"--entry-point {entrypoint}"
+        options += f"--entry-point {entrypoint}"
 
-        container = runLigoContainer(
-            command,
-            [contract],
-            volumes={
-                f"{os.getcwd()}/contracts/": {"bind": "/contracts/", "mode": "ro"},
-                f"{os.getcwd()}/tests/": {"bind": "/tests/", "mode": "ro"},
-                f"{os.getcwd()}/build/contracts/": {
-                    "bind": "/build/",
-                    "mode": "rw",
+        if local:
+            command = f"ligo compile contract {contract} {options}"
+            
+            proc = helpers.runCommand(command, shell=True)
+            proc.wait()
+            
+            output = proc.stdout.read().decode()
+            error = proc.stderr.read().decode()
+
+            if f'File "{name}"' in error:
+                return False, error
+
+            if error:
+                return False, error
+
+        else:
+            command  = f"compile contract {name} {options}"
+            container = runLigoContainer(
+                command,
+                [contract],
+                volumes={
+                    f"{os.getcwd()}/contracts/": {"bind": "/contracts/", "mode": "ro"},
+                    f"{os.getcwd()}/tests/": {"bind": "/tests/", "mode": "ro"},
+                    f"{os.getcwd()}/build/contracts/": {
+                        "bind": "/build/",
+                        "mode": "rw",
+                    },
+                    f"{os.getcwd()}": {"bind": "/home/", "mode": "ro"},
                 },
-                f"{os.getcwd()}": {"bind": "/home/", "mode": "ro"},
-            },
-        )
+            )
 
-        output = ""
+            for line in container.logs(stream=True, stdout=True, stderr=True):
+                output += line.decode("utf-8")
 
-        for line in container.logs(stream=True, stdout=True, stderr=True):
-            output += line.decode("utf-8")
-
-        error = f'File "{name}"'
-        if error in output[: len(error)]:
-            return False, output
+            error = f'File "{name}"'
+            if error in output[: len(error)]:
+                return False, output
 
         return True, output
 
@@ -130,7 +147,7 @@ class Ligo:
         spinner.start()
 
         if "ligo" in self.config.compiler.test:
-            suc, msg = self.runSingleLigoTest(test)
+            suc, msg = self.runSingleLigoTest(test, local=self.args.local)
             if not suc:
                 spinner.fail(text=f"Test {str(name)} Failed!\n{msg}")
                 return 1
@@ -144,21 +161,38 @@ class Ligo:
             )
             return 1
 
-    def runSingleLigoTest(self, test):
+    def runSingleLigoTest(self, test, local=False):
         name = pathlib.Path(test).name
         command = f"run test /home/tests/{name}"
 
-        container = runLigoContainer(
-            command, [test], volumes={os.getcwd(): {"bind": "/home/", "mode": "ro"}}
-        )
-        output = ""
+        if local:
+            command = f"ligo run test {test}"
+            
+            proc = helpers.runCommand(command, shell=True)
+            proc.wait()
+            
+            output = proc.stdout.read().decode()
+            error = proc.stderr.read().decode()
 
-        for line in container.logs(stream=True):
-            output += line.decode("utf-8")
+            if "File " in error:
+                return False, error
 
-        error = "File "
-        if error in output[: len(error)]:
-            return False, output
+            if error:
+                return False, error
+
+        else:
+
+            container = runLigoContainer(
+                command, [test], volumes={os.getcwd(): {"bind": "/home/", "mode": "ro"}}
+            )
+            output = ""
+
+            for line in container.logs(stream=True):
+                output += line.decode("utf-8")
+
+            error = "File "
+            if error in output[: len(error)]:
+                return False, output
 
         return True, output
 
