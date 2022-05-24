@@ -60,7 +60,7 @@ $ brew install libsodium libsecp256k1 gmp
 #### Installation
 
 ```bash
-git clone -b v0.0.16 https://github.com/ant4g0nist/chinstrap
+git clone -b v0.1.0 https://github.com/ant4g0nist/chinstrap
 cd chinstrap
 python3 setup.py install
 ```
@@ -68,7 +68,7 @@ python3 setup.py install
 ### Usage
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.0.16›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.1.0›
 ╰─➤  chinstrap
 
       _     _           _
@@ -109,7 +109,7 @@ $ chinstrap compile
 For Flextesa sandbox:
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.0.16›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.1.0›
 ╰─➤  chinstrap sandbox -h
 
       _     _           _
@@ -158,7 +158,7 @@ optional arguments:
 To run tests:
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.0.16›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v0.1.0›
 ╰─➤  chinstrap test
 ```
 
@@ -186,7 +186,7 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 ### Milestone 2
 - [ ] Improve, update, and maintain comprehensive documentation of the platform for relevant stakeholders (e.g. developers and others).
 - [ ] Improve the sandbox and REPL (Real-Eval-Print Loop) experience of the platform.
-- [ ] Release version 0.0.16 of the platform.
+- [ ] Release version 0.1.0 of the platform.
 
 ### Milestone 3
 - [ ] Provide a Visual Studio Code plugin for origination and tests.
@@ -198,17 +198,17 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 * [x] Update Chinstrap to latest protocols
 * [x] Add SmartPy templates
 * [x] Add Ligo templates
+* [x] Update documentation to support v0.1.0
+* [x] Create chinstrap.io landing page
 * [ ] Add repl
 * [ ] Improve Sandbox integrations in repl
 * [ ] Add support for Jest tests
 * [ ] Add TypeScript generation for compiled contracts
-* [ ] Create chinstrap.io landing page
-* [ ] Update documentation to support v0.0.16
-* [ ] Release version 0.0.16 of the platform.
+* [ ] Release version 0.1.0 of the platform.
 * [ ] Visual studio code plugin
 * [ ] Add unit tests for chinstrap
 * [ ] Add a homebrew formula
-
+* [ ] Add fig specifications
 ## References
 
 * [https://smartpy.io/docs](https://smartpy.io/docs)
