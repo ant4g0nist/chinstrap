@@ -5,7 +5,6 @@ import argparse
 import requests
 from rich import pretty
 from pathlib import Path
-from chinstrap import core
 from chinstrap import helpers
 from chinstrap.tests import Tests
 from chinstrap.repl import launchRepl
@@ -138,13 +137,15 @@ def chinstrapRunOriginations(args, env):
     originations.showCosts()
 
 
-def chinstrapDevelopmentRepl(args, env):    
+def chinstrapDevelopmentRepl(args, env):
     launchRepl(args)
+
 
 def chinstrapAccount(args, env):
     # if args.balance:
     #     core.checkAccountBalance(args.account, args.network)
     helpers.fatal("TODO")
+
 
 def main(args, env=os.environ):
 
@@ -475,6 +476,20 @@ from the last completed migration",
         action="store_true",
         help="Force originate all originations. \
 Be careful, this will re-originate all the contracts even if they are already deployed.",
+    )
+    parser_k.add_argument(
+        "-t",
+        "--werror",
+        default=False,
+        action="store_true",
+        help="Treat Ligo compiler warnings as errors",
+    )
+    parser_k.add_argument(
+        "-w",
+        "--warning",
+        default=False,
+        action="store_true",
+        help="Display Ligo compiler warnings",
     )
     parser_k.set_defaults(func=chinstrapRunOriginations)
 

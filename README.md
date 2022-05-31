@@ -203,12 +203,13 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 * [ ] Add repl
 * [ ] Improve Sandbox integrations in repl
 * [ ] Add support for Jest tests
-* [ ] Add TypeScript generation for compiled contracts
 * [ ] Release version 0.1.0 of the platform.
+* [ ] Add TypeScript generation for compiled contracts
 * [ ] Visual studio code plugin
 * [ ] Add unit tests for chinstrap
 * [ ] Add a homebrew formula
 * [ ] Add fig specifications
+
 ## References
 
 * [https://smartpy.io/docs](https://smartpy.io/docs)

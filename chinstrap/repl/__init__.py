@@ -1,138 +1,151 @@
 import os
+import chinstrap
 from rich import pretty
+from pytezos import pytezos
+from chinstrap import helpers
+from chinstrap import sandbox
+from argparse import Namespace
+from chinstrap.compiler import Compilers
+from chinstrap.repl import repl
 from ptpython.repl import embed
 from chinstrap.core import config
-from chinstrap.repl import commands
-from chinstrap.sandbox import Sandbox
-from ptpython.prompt_style import PromptStyle
-from ptpython.layout import CompletionVisualisation
-from prompt_toolkit.formatted_text import AnyFormattedText
+from chinstrap import originations
+from chinstrap.languages import TemplateOptions
 
-__prompt__ = "chinstrap:> "
-chinstrapRoot = os.path.expanduser("~/.chinstrap/")
-historyPath = f"{chinstrapRoot}/history"
 
-if not os.path.exists(chinstrapRoot):
-    os.mkdir(chinstrapRoot)
-    with open(historyPath, "w") as f:
-        f.write("")
+@helpers.handleException()
+def cExit():
+    helpers.hexit()
 
-def configure(repl):
-    # Configuration method. This is called during the start-up of ptpython.
-    
-    # # Show function signature (bool).
-    repl.show_signature = True
 
-    # # Show docstring (bool).
-    repl.show_docstring = True
+@helpers.handleException()
+def stopSandbox():
+    sand = sandbox.Sandbox("")
+    sand.halt()
 
-    # # Show the "[Meta+Enter] Execute" message when pressing [Enter] only
-    # # inserts a newline instead of executing the code.
-    repl.show_meta_enter_message = True
 
-    # # Show completions. (NONE, POP_UP, MULTI_COLUMN or TOOLBAR)
-    repl.completion_visualisation = CompletionVisualisation.MULTI_COLUMN
+@helpers.handleException()
+def getContract(name):
+    return originations.getContract(name)
 
-    repl.completion_menu_scroll_offset = 0
 
-    repl.show_status_bar = False
-    repl.show_sidebar_help = False
+@helpers.handleException()
+def getContractFromFile(filename):
+    if os.path.exists(filename):
+        return pytezos.ContractInterface.from_file(filename)
 
-    # # Highlight matching parethesis.
-    repl.highlight_matching_parenthesis = True
+    helpers.debug("Please make sure file exists!")
 
-    # # Line wrapping. (Instead of horizontal scrolling.)
-    repl.wrap_lines = True
 
-    # # Complete while typing. (Don't require tab before the
-    # # completion menu is shown.)
-    repl.complete_while_typing = True
+@helpers.handleException()
+def getContractFromAddress(address):
+    print(_config)
+    return _config.wallet.contract(address)
 
-    # Vi mode.
-    repl.vi_mode = False
 
-    # # Paste mode. (When True, don't insert whitespace after new line.)
-    # repl.paste_mode = False
+@helpers.handleException()
+def getContractFromURL(url):
+    return pytezos.ContractInterface.from_url(url)
 
-    class ClassicPrompt(PromptStyle):
-        """
-        The classic Python prompt.
-        """
 
-        def in_prompt(self) -> AnyFormattedText:
-            return [("class:prompt", __prompt__)]
+@helpers.handleException()
+def compile(contract=None, local=False, werror=False, warning=False, entrypoint="main"):
+    args = Namespace(
+        contract=contract,
+        local=local,
+        werror=werror,
+        warning=warning,
+        entrypoint=entrypoint,
+    )
+    chinstrap.chinstrapCompileContracts(args, "")
 
-        def in2_prompt(self, width: int) -> AnyFormattedText:
-            return [("class:prompt.dots", "...")]
 
-        def out_prompt(self) -> AnyFormattedText:
-            return []
+@helpers.handleException()
+def test(test=None, local=False, entrypoint="main"):
+    args = Namespace(test=test, local=local, entrypoint=entrypoint)
+    chinstrap.chinstrapRunTests(args, "")
 
-    # Use the classic prompt. (Display '>>>' instead of 'In [1]'.)
-    repl.all_prompt_styles["custom"] = ClassicPrompt()
-    repl.prompt_style = "custom"  # "ipython"  # 'classic' or 'ipython'
 
-    # Don't insert a blank line after the output.
-    repl.insert_blank_line_after_output = False
+@helpers.handleException()
+def template(language=TemplateOptions):
+    args = Namespace(language=language)
+    chinstrap.chinstrapTemplates(args, "")
 
-    repl.enable_history_search = True
 
-    # Enable auto suggestions. (Pressing right arrow will complete the input,
-    # based on the history.)
-    repl.enable_auto_suggest = False
+@helpers.handleException()
+def originate(
+    originate=None,
+    number=None,
+    network="development",
+    port=20000,
+    reset=False,
+    show=False,
+    force=False,
+    contract=None,
+    local=False,
+    werror=False,
+    warning=False,
+    entrypoint="main",
+):
+    args = Namespace(
+        originate=originate,
+        number=number,
+        network=network,
+        port=port,
+        reset=reset,
+        show=show,
+        force=force,
+        contract=contract,
+        local=local,
+        werror=werror,
+        warning=warning,
+        entrypoint=entrypoint,
+    )
+    chinstrap.chinstrapRunOriginations(args, "")
 
-    # Enable open-in-editor. Pressing C-x C-e in emacs mode or 'v' in
-    # Vi navigation mode will open the input in the current editor.
-    repl.enable_open_in_editor = True
 
-    # Enable system prompt. Pressing meta-! will display the system prompt.
-    # Also enables Control-Z suspend.
-    repl.enable_system_bindings = True
+@helpers.handleException()
+def sandboxAccounts():
+    sandbox.Sandbox.listAccounts()
 
-    # Ask for confirmation on exit.
-    repl.confirm_exit = True
 
-    # Enable input validation. (Don't try to execute when the input contains
-    # syntax errors.)
-    repl.enable_input_validation = True
-
-    # Use this colorscheme for the code.
-    repl.use_code_colorscheme("default")
-
-    repl.color_depth = "DEPTH_8_BIT"  # The default, 256 colors.
-    # repl.color_depth = "DEPTH_24_BIT"  # True color.
-
-    # Min/max brightness
-    repl.min_brightness = 0.0  # Increase for dark terminal backgrounds.
-    repl.max_brightness = 1.0  # Decrease for light terminal backgrounds.
-
-    # Syntax.
-    repl.enable_syntax_highlighting = True
-
-    # Get into Vi navigation mode at startup
-    repl.vi_start_in_navigation_mode = False
-
-    # Preserve last used Vi input mode between main loop iterations
-    repl.vi_keep_last_used_mode = False
-
-    repl.confirm_exit = False
+@helpers.handleException()
+def install(compiler=Compilers, local=False, force=False):
+    args = Namespace(compiler=compiler, local=local, force=force)
+    chinstrap.chinstrapInstallCompilers(args, "")
 
 
 def launchRepl(args):
+    global _config
     pretty.install()
 
-    if args.network == 'development':
-        sandbox = Sandbox(args)
-        sandbox.args.detach = True
-        sandbox.initialize()
-        sandbox.run()
+    if args.network == "development":
+        _sandbox = sandbox.Sandbox(args)
+        _sandbox.args.detach = True
+        _sandbox.initialize()
+        _sandbox.run()
 
-    conf = config.Config(args.network)
+    _config = config.Config(args.network)
+
     functions = {
-        'config': conf,
-        'getContract':commands.getContract,
-        'getContractFromFile':commands.getContractFromFile,
-        'stopSandbox':commands.stopSandbox,
-        'exit': commands.cExit
+        "config": _config,
+        "getContract": getContract,
+        "getContractFromFile": getContractFromFile,
+        "getContractFromURL": getContractFromURL,
+        "getContractFromAddress": getContractFromAddress,
+        "compile": compile,
+        "test": test,
+        "template": template,
+        "JsLigo": TemplateOptions.jsligo,
+        "CameLIGO": TemplateOptions.cameligo,
+        "ReasonLIGO": TemplateOptions.religo,
+        "PascaLIGO": TemplateOptions.pascaligo,
+        "accounts": sandboxAccounts,
+        "stopSandbox": stopSandbox,
+        "originate": originate,
+        "install": install,
+        "compilers": Compilers,
+        "exit": cExit,
     }
-    embed({}, functions, configure=configure, history_filename=historyPath)
+
+    embed({}, functions, configure=repl.configure, history_filename=repl.historyPath)

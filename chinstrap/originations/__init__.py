@@ -21,7 +21,7 @@ def getContract(contractName):
     global currentContractName
     currentContractName = contractName
     contractPath = f"build/contracts/{contractName}/step_000_cont_0_contract.tz"
-    
+
     with open(contractPath) as f:
         contractHash = calculateHash(f.read().encode())
 
@@ -65,11 +65,12 @@ class Originations:
             try:
                 self.config.wallet.contract(origination["address"])
                 if not force:
-                    spinner.fail(
+                    spinner.succeed(
                         f"Contract {currentContractName} is already \
 originated at {origination['address']} on {origination['date']}"
                     )
-                    fatal("")
+
+                    return True, origination
 
             except Exception:
                 pass
@@ -93,7 +94,20 @@ originated at {origination['address']} on {origination['date']}"
                 self.state, self.config.network, self.config.accounts
             )
 
-            self.ensureIsNotOriginated(spinner, self.args.force)
+            originated, _origination = self.ensureIsNotOriginated(
+                spinner, self.args.force
+            )
+            if originated:
+                addr = _origination["address"]
+                txhash = _origination["orignation_hash"]
+                spinner.succeed(
+                    text=f"{currentContractName}'s origination transaction at: {txhash}"
+                )
+                printFormatted(
+                    f"<ansigreen>✔</ansigreen> <ansired>{currentContractName}</ansired> address: \
+<ansigreen>{addr}</ansigreen>"
+                )
+                return
 
             res = (
                 self.config.wallet.origination(
@@ -220,7 +234,9 @@ class ChinstrapOriginationState:
     def showOriginations(self, network):
         if network in self.networks:
             originations = self.networks[network]
-            print(f'\nNetwork {"":16} Address {"":32} Date {"":36} Tx {"":32} Name ')
+            title = f'\nNetwork {"":16} Address {"":32} Date {"":36} Tx {"":32} Name '
+            print("_" * len(title))
+            print(title)
             for _hash, origination in originations.items():
                 # TODO:
                 print(
@@ -228,3 +244,4 @@ class ChinstrapOriginationState:
  {helpers.WHT}{origination['date']:32} \
 {helpers.GRN}{origination['orignation_hash']:46} {helpers.YEL}{origination['name']}{helpers.RST}"
                 )
+            print("_" * len(title))

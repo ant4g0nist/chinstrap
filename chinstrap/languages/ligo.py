@@ -1,5 +1,4 @@
 import os
-from posixpath import basename
 import re
 import glob
 import halo
@@ -46,7 +45,11 @@ class Ligo:
         spinner.start()
 
         success, msg = Ligo.runCompiler(
-            contract, entrypoint, werror=self.args.werror, warnings=self.args.warning, local=self.args.local
+            contract,
+            entrypoint,
+            werror=self.args.werror,
+            warnings=self.args.warning,
+            local=self.args.local,
         )
         if not success:
             self.status = 1
@@ -72,10 +75,13 @@ class Ligo:
         return spin
 
     @staticmethod
-    def runCompiler(contract, entrypoint="main", werror=False, warnings=False, local=False):
+    def runCompiler(
+        contract, entrypoint="main", werror=False, warnings=False, local=False
+    ):
         name = pathlib.Path(contract).name
-        
-        options = f""
+
+        output = ""
+        options = ""
 
         if werror:
             options += " --werror "
@@ -87,10 +93,10 @@ class Ligo:
 
         if local:
             command = f"ligo compile contract {contract} {options}"
-            
+
             proc = helpers.runCommand(command, shell=True)
             proc.wait()
-            
+
             output = proc.stdout.read().decode()
             error = proc.stderr.read().decode()
 
@@ -101,7 +107,7 @@ class Ligo:
                 return False, error
 
         else:
-            command  = f"compile contract {name} {options}"
+            command = f"compile contract {name} {options}"
             container = runLigoContainer(
                 command,
                 [contract],
@@ -167,10 +173,10 @@ class Ligo:
 
         if local:
             command = f"ligo run test {test}"
-            
+
             proc = helpers.runCommand(command, shell=True)
             proc.wait()
-            
+
             output = proc.stdout.read().decode()
             error = proc.stderr.read().decode()
 
