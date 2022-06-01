@@ -1,4 +1,3 @@
-from genericpath import exists
 import os
 import halo
 import json
@@ -148,7 +147,7 @@ on different port: {helpers.RED}{port}{helpers.RST}"
     def listAccounts():
         state = Sandbox.getSandboxState()
         if not state:
-            return False        
+            return False
         accounts = state["accounts"]
         title = f'\nname {"":32} address {"":32} publicKey {"":46} privateKey'
         print("_" * len(title))
@@ -270,7 +269,7 @@ on different port: {helpers.RED}{port}{helpers.RST}"
                 spinner.fail(f"\nPort {self.args.port} already in use")
             else:
                 spinner.fail(e)
-            
+
             self.container.remove(force=True)
             fatal("")
 

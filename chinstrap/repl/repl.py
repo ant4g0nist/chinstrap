@@ -12,9 +12,10 @@ if not os.path.exists(chinstrapRoot):
     with open(historyPath, "w") as f:
         f.write("")
 
+
 def configure(repl):
     # Configuration method. This is called during the start-up of ptpython.
-    
+
     # # Show function signature (bool).
     repl.show_signature = True
 

@@ -95,6 +95,7 @@ def runSmartPyContainer(
     except Exception as e:
         fatal(e)
 
+
 @makeSureDockerIsRunning()
 def runCommandInContainer(
     image, tag, command, files_to_add=[], detach=True, volumes={}, auto_remove=True

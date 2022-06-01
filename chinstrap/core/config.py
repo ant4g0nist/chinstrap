@@ -74,9 +74,10 @@ class Config:
         if not compileFlag:
             helpers.printFormatted(
                 f"""Loaded wallet <ansiyellow><b>{wallet.key.public_key_hash()}</b> \
-    </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen><b>{wallet.balance()}</b></ansigreen>\n"""
+    </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen><b>\
+{wallet.balance()}</b></ansigreen>\n"""
             )
-            
+
         self.accounts.append(wallet)
 
     def save(self):

@@ -28,11 +28,11 @@ def stopSandbox():
 @helpers.handleException()
 def getContract(name):
     """
-        Get Contract Interface from name.
-        arguments:
-            name: name of the contract from contracts/ folder to get
-        returns  :
-            pytezos.ContractInterface
+    Get Contract Interface from name.
+    arguments:
+        name: name of the contract from contracts/ folder to get
+    returns  :
+        pytezos.ContractInterface
     """
     return originations.getContract(name)
 
@@ -51,13 +51,16 @@ def getContractFromFile(filename):
 
     helpers.error("Please make sure file exists!")
 
+
 @helpers.handleException()
 def getContractFromAddress(address):
     return _config.wallet.contract(address)
 
+
 @helpers.handleException()
 def getContractFromURL(url):
     return ContractInterface.from_url(url)
+
 
 @helpers.handleException()
 def compile(contract=None, local=False, werror=False, warning=False, entrypoint="main"):
@@ -139,32 +142,33 @@ def launchRepl(args):
     _config = config.Config(args.network, compileFlag=True)
 
     helpers.printFormatted(
-                f"""Loaded wallet <ansiyellow><b>{_config.wallet.key.public_key_hash()}</b> \
-    </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen><b>{_config.wallet.balance()}</b></ansigreen>\n"""
-            )
+        f"""Loaded wallet <ansiyellow><b>{_config.wallet.key.public_key_hash()}</b> \
+    </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen>\
+<b>{_config.wallet.balance()}</b></ansigreen>\n"""
+    )
 
     functions = {
-        'pytezos'                   : pytezos,
-        "config"                    : _config,
-        "network"                   : _config.network,
-        "getContract"               : getContract,
-        "getContractFromFile"       : getContractFromFile,
-        "getContractFromURL"        : getContractFromURL,
-        "getContractFromAddress"    : getContractFromAddress,
-        "compile"                   : compile,
-        "test"                      : test,
-        "template"                  : template,
-        "TemplateOptions"           : TemplateOptions,
-        "JsLigo"                    : TemplateOptions.jsligo,
-        "CameLIGO"                  : TemplateOptions.cameligo,
-        "ReasonLIGO"                : TemplateOptions.religo,
-        "PascaLIGO"                 : TemplateOptions.pascaligo,
-        "accounts"                  : sandboxAccounts,
-        "stopSandbox"               : stopSandbox,
-        "originate"                 : originate,
-        "install"                   : install,
-        "compilers"                 : Compilers,
-        "exit"                      : cExit,
+        "pytezos": pytezos,
+        "config": _config,
+        "network": _config.network,
+        "getContract": getContract,
+        "getContractFromFile": getContractFromFile,
+        "getContractFromURL": getContractFromURL,
+        "getContractFromAddress": getContractFromAddress,
+        "compile": compile,
+        "test": test,
+        "template": template,
+        "TemplateOptions": TemplateOptions,
+        "JsLigo": TemplateOptions.jsligo,
+        "CameLIGO": TemplateOptions.cameligo,
+        "ReasonLIGO": TemplateOptions.religo,
+        "PascaLIGO": TemplateOptions.pascaligo,
+        "accounts": sandboxAccounts,
+        "stopSandbox": stopSandbox,
+        "originate": originate,
+        "install": install,
+        "compilers": Compilers,
+        "exit": cExit,
     }
 
     embed({}, functions, configure=repl.configure, history_filename=repl.historyPath)

@@ -92,17 +92,22 @@ originated at {origination['address']} on {origination['date']}"
                 text=f"Origination {origination} in progress", spinner="dots"
             )
             spinner.start()
-            
+
             try:
                 storage, contract = orig.deploy(
                     self.state, self.config.network, self.config.accounts
-                )   
+                )
             except Exception as e:
-                contractPath = f"build/contracts/{currentContractName}/step_000_cont_0_contract.tz"
+                contractPath = (
+                    f"build/contracts/{currentContractName}/step_000_cont_0_contract.tz"
+                )
                 if not pathlib.Path(contractPath).exists():
-                    spinner.fail(f"Failed to run {origination}. Unable to find {currentContractName} in contracts.")
+                    spinner.fail(
+                        f"Failed to run {origination}. Unable to find \
+{currentContractName} in contracts."
+                    )
                     return
-                
+
                 spinner.fail(str(e))
                 return
 
