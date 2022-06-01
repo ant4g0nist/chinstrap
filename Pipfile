@@ -3,21 +3,16 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[dev-packages]
-#
-# REMINDER: Update "dev" deps on setup.py when changing
-#
-
-
 [packages]
-#
-# REMINDER: Update "install_requires" deps on setup.py when changing
-#
-docker  = ">=4.4.4"
-ptpython = ">=3.0.19"
-pytezos = ">=3.2.6"
-halo = ">=0.0.31"
-python-gitlab = ">=2.10.0"
+halo            = ">=0.0.31"
+rich            = "=>12.4.1"
+docker          = ">=5.0.3"
+pytest          = ">=6.2.5"
+pytezos         = ">=6.2.5"
+requests        = ">=2.27.1"
+ptpython        = ">=3.0.20"
+python-gitlab   = ">=3.1.0"
+pre-commit      = ">=2.17.0"
 
 [requires]
 python_version = "3"

@@ -87,14 +87,14 @@ pip3 install -U chinstrap
 ### Usage
 
 ```bash
-$ chinstrap          
+$ chinstrap
 
-      _     _           _                   
-  ___| |__ (_)_ __  ___| |_ _ __ __ _ _ __  
- / __| '_ \| | '_ \/ __| __| '__/ _` | '_ \ 
+      _     _           _
+  ___| |__ (_)_ __  ___| |_ _ __ __ _ _ __
+ / __| '_ \| | '_ \/ __| __| '__/ _` | '_ \
 | (__| | | | | | | \__ \ |_| | | (_| | |_) |
- \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/ 
-                                     |_|    
+ \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/
+                                     |_|
 
 
 usage: chinstrap [-h] [--init] [--compile] [--create] [--debug] [--templates] [--develop] [--originate] [--reset] [--network NETWORK] [--test] [--sandbox] [--sandbox-stop] [--sandbox-detach]
@@ -191,4 +191,3 @@ $ chinstrap --templates
 * Truffle
 * Baking-Bad
 * logo by [@sengar23](https://github.com/sengar23)
-
