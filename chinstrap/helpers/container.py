@@ -92,6 +92,8 @@ def runSmartPyContainer(
 "chinstrap install -c smartpy" to download SmartPy image.'
         )
 
+    except Exception as e:
+        fatal(e)
 
 @makeSureDockerIsRunning()
 def runCommandInContainer(
