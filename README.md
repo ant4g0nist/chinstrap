@@ -186,7 +186,7 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 ### Milestone 2
 - [x] Improve, update, and maintain comprehensive documentation of the platform for relevant stakeholders (e.g. developers and others).
 - [x] Improve the sandbox and REPL (Real-Eval-Print Loop) experience of the platform.
-- [ ] Release version 0.1.0 of the platform.
+- [ ] Release version 1.0.0 of the platform.
 
 ### Milestone 3
 - [ ] Provide a Visual Studio Code plugin for origination and tests.
