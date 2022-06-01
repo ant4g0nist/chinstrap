@@ -20,7 +20,7 @@ class Config:
                 self.compiler = self.config.compiler
                 self.compiler.lang = self.compiler.lang.lower()
 
-            elif network == "development":
+            if network == "development":
                 self.network = self.config.network.development
                 self.network.name = "development"
 
@@ -40,10 +40,10 @@ class Config:
             msg = f"Using <ansiyellow><b>{self.network.name}</b></ansiyellow> network"
             helpers.printFormatted(msg)
 
-            if self.network.accounts:
-                self.loadAccounts()
+        if self.network.accounts:
+            self.loadAccounts(compileFlag)
 
-    def loadAccounts(self):
+    def loadAccounts(self, compileFlag=False):
         self.accounts = []
         try:
             keyFile = self.network.accounts[0].privateKeyFile
@@ -52,18 +52,18 @@ class Config:
             self.wallet = pytezos.using(shell=f"{self.network.host}", key=self.key)
 
             for i in self.network.accounts:
-                self.loadPrivateKeyFromFile(i.privateKeyFile)
+                self.loadPrivateKeyFromFile(i.privateKeyFile, compileFlag)
 
         except Exception as e:
             helpers.error("Exception occurred while loading accounts!")
             print(e)
             helpers.fatal("")
 
-    def loadPrivateKeyFromFile(self, keyFile):
+    def loadPrivateKeyFromFile(self, keyFile, compileFlag=False):
         key = self.getKeyFromFile(keyFile)
-        self.loadPrivateKey(key)
+        self.loadPrivateKey(key, compileFlag)
 
-    def loadPrivateKey(self, key):
+    def loadPrivateKey(self, key, compileFlag=False):
         try:
             wallet = pytezos.using(shell=f"{self.network.host}", key=key)
         except pytezos.rpc.node.RpcError:
@@ -71,10 +71,12 @@ class Config:
                 f"Failed to connect to {self.network.host}. Try again in sometime!"
             )
 
-        helpers.printFormatted(
-            f"""Loaded wallet <ansiyellow><b>{wallet.key.public_key_hash()}</b> \
-</ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen><b>{wallet.balance()}</b></ansigreen>\n"""
-        )
+        if not compileFlag:
+            helpers.printFormatted(
+                f"""Loaded wallet <ansiyellow><b>{wallet.key.public_key_hash()}</b> \
+    </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen><b>{wallet.balance()}</b></ansigreen>\n"""
+            )
+            
         self.accounts.append(wallet)
 
     def save(self):
@@ -111,3 +113,12 @@ class Config:
             return json.loads(key)
         except Exception:
             return key
+
+    def __str__(self):
+        msg = ""
+        msg += f"Network  : {helpers.RED}{self.network.name}{helpers.RST}\n"
+        msg += f"Host     : {helpers.YEL}{self.network.host}{helpers.RST}\n"
+        msg += f"Account  : {helpers.GRN}{self.wallet.key.public_key_hash()}{helpers.RST}\n"
+        msg += f"Balance  : {helpers.RED}ꜩ {helpers.GRN}{self.wallet.balance()}{helpers.RST}\n"
+        msg += f"Compiler : {helpers.RED}{self.compiler.lang}{helpers.RST}\n"
+        return msg

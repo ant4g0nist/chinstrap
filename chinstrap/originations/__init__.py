@@ -75,9 +75,9 @@ originated at {origination['address']} on {origination['date']}"
             except Exception:
                 pass
 
-            return origination
+            return True, origination
 
-        return False
+        return False, ""
 
     def originate(self, origination):
         origination = pathlib.Path(origination).stem

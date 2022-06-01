@@ -184,8 +184,8 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 - [x] Support and facilitate the programming of smart contracts and respective tests in Ligo.
 
 ### Milestone 2
-- [ ] Improve, update, and maintain comprehensive documentation of the platform for relevant stakeholders (e.g. developers and others).
-- [ ] Improve the sandbox and REPL (Real-Eval-Print Loop) experience of the platform.
+- [x] Improve, update, and maintain comprehensive documentation of the platform for relevant stakeholders (e.g. developers and others).
+- [x] Improve the sandbox and REPL (Real-Eval-Print Loop) experience of the platform.
 - [ ] Release version 0.1.0 of the platform.
 
 ### Milestone 3
@@ -200,11 +200,11 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 * [x] Add Ligo templates
 * [x] Update documentation to support v0.1.0
 * [x] Create chinstrap.io landing page
-* [ ] Add repl
-* [ ] Improve Sandbox integrations in repl
-* [ ] Add support for Jest tests
+* [x] Add repl
+* [x] Improve Sandbox integrations in repl
 * [ ] Release version 0.1.0 of the platform.
 * [ ] Add TypeScript generation for compiled contracts
+* [ ] Add support for Jest tests
 * [ ] Visual studio code plugin
 * [ ] Add unit tests for chinstrap
 * [ ] Add a homebrew formula

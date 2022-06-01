@@ -1,15 +1,16 @@
 import os
 import chinstrap
 from rich import pretty
+from pytezos import ContractInterface
 from pytezos import pytezos
 from chinstrap import helpers
 from chinstrap import sandbox
 from argparse import Namespace
-from chinstrap.compiler import Compilers
 from chinstrap.repl import repl
 from ptpython.repl import embed
 from chinstrap.core import config
 from chinstrap import originations
+from chinstrap.compiler import Compilers
 from chinstrap.languages import TemplateOptions
 
 
@@ -26,27 +27,37 @@ def stopSandbox():
 
 @helpers.handleException()
 def getContract(name):
+    """
+        Get Contract Interface from name.
+        arguments:
+            name: name of the contract from contracts/ folder to get
+        returns  :
+            pytezos.ContractInterface
+    """
     return originations.getContract(name)
 
 
 @helpers.handleException()
 def getContractFromFile(filename):
+    """
+    Get contract from michelson source code stored in a file and returns.
+    arguments:
+        filename: filename of the contract to get
+    returns  :
+        pytezos.ContractInterface
+    """
     if os.path.exists(filename):
-        return pytezos.ContractInterface.from_file(filename)
+        return ContractInterface.from_file(filename)
 
-    helpers.debug("Please make sure file exists!")
-
+    helpers.error("Please make sure file exists!")
 
 @helpers.handleException()
 def getContractFromAddress(address):
-    print(_config)
     return _config.wallet.contract(address)
-
 
 @helpers.handleException()
 def getContractFromURL(url):
-    return pytezos.ContractInterface.from_url(url)
-
+    return ContractInterface.from_url(url)
 
 @helpers.handleException()
 def compile(contract=None, local=False, werror=False, warning=False, entrypoint="main"):
@@ -125,27 +136,35 @@ def launchRepl(args):
         _sandbox.initialize()
         _sandbox.run()
 
-    _config = config.Config(args.network)
+    _config = config.Config(args.network, compileFlag=True)
+
+    helpers.printFormatted(
+                f"""Loaded wallet <ansiyellow><b>{_config.wallet.key.public_key_hash()}</b> \
+    </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen><b>{_config.wallet.balance()}</b></ansigreen>\n"""
+            )
 
     functions = {
-        "config": _config,
-        "getContract": getContract,
-        "getContractFromFile": getContractFromFile,
-        "getContractFromURL": getContractFromURL,
-        "getContractFromAddress": getContractFromAddress,
-        "compile": compile,
-        "test": test,
-        "template": template,
-        "JsLigo": TemplateOptions.jsligo,
-        "CameLIGO": TemplateOptions.cameligo,
-        "ReasonLIGO": TemplateOptions.religo,
-        "PascaLIGO": TemplateOptions.pascaligo,
-        "accounts": sandboxAccounts,
-        "stopSandbox": stopSandbox,
-        "originate": originate,
-        "install": install,
-        "compilers": Compilers,
-        "exit": cExit,
+        'pytezos'                   : pytezos,
+        "config"                    : _config,
+        "network"                   : _config.network,
+        "getContract"               : getContract,
+        "getContractFromFile"       : getContractFromFile,
+        "getContractFromURL"        : getContractFromURL,
+        "getContractFromAddress"    : getContractFromAddress,
+        "compile"                   : compile,
+        "test"                      : test,
+        "template"                  : template,
+        "TemplateOptions"           : TemplateOptions,
+        "JsLigo"                    : TemplateOptions.jsligo,
+        "CameLIGO"                  : TemplateOptions.cameligo,
+        "ReasonLIGO"                : TemplateOptions.religo,
+        "PascaLIGO"                 : TemplateOptions.pascaligo,
+        "accounts"                  : sandboxAccounts,
+        "stopSandbox"               : stopSandbox,
+        "originate"                 : originate,
+        "install"                   : install,
+        "compilers"                 : Compilers,
+        "exit"                      : cExit,
     }
 
     embed({}, functions, configure=repl.configure, history_filename=repl.historyPath)
