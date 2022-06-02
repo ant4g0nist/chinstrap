@@ -63,11 +63,12 @@ def addFilesToContainer(container, files, location):
             buffer,
         )
         return True
-        
+
     except Exception as e:
         print(e)
-    
+
     return False
+
 
 @makeSureDockerIsRunning()
 def runLigoContainer(
@@ -125,12 +126,14 @@ def runCommandInContainer(
         container.start()
     except Exception as e:
         if "Mounts denied" in str(e):
-            fatal("\nCurrent project is not shared from the host to Docker. \
+            fatal(
+                "\nCurrent project is not shared from the host to Docker. \
 You can configure shared paths from Docker -> Preferences... -> \
-Resources -> File Sharing")
+Resources -> File Sharing"
+            )
 
         raise e
-        
+
     return container
 
 
