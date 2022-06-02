@@ -1,6 +1,6 @@
 # Chinstrap
 
-![Chinstrap](docs/images/logo.png)
+![Chinstrap](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/logo.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/madhuakula/kubernetes-goat/blob/master/LICENSE)
 [![Baked by ant4g0nist](https://img.shields.io/twitter/follow/ant4g0nist?style=social)](https://twitter.com/ant4g0nist)
@@ -186,7 +186,7 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 ### Milestone 2
 - [x] Improve, update, and maintain comprehensive documentation of the platform for relevant stakeholders (e.g. developers and others).
 - [x] Improve the sandbox and REPL (Real-Eval-Print Loop) experience of the platform.
-- [ ] Release version 1.0.0 of the platform.
+- [x] Release version 1.0.0 of the platform.
 
 ### Milestone 3
 - [ ] Provide a Visual Studio Code plugin for origination and tests.
