@@ -66,8 +66,8 @@ reported to the community leaders responsible for enforcement at
 All community leaders are obligated to respect the privacy and security of the
 reporter of any incident.
 
-Project maintainers who do not follow or enforce the Code of Conduct in good faith may 
-face temporary or permanent repercussions as determined by other members of the project's 
+Project maintainers who do not follow or enforce the Code of Conduct in good faith may
+face temporary or permanent repercussions as determined by other members of the project's
 leadership.
 
 ## Attribution

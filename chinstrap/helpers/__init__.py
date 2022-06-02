@@ -6,8 +6,10 @@ import fcntl
 import shutil
 import struct
 import hashlib
+import pathlib
 import pytezos
 import termios
+import platform
 import subprocess
 from halo import Halo
 from typing import List
@@ -548,3 +550,28 @@ def calculateHash(msg):
 
 def dictToNamespace(result):
     return json.loads(json.dumps(result), object_hook=lambda d: SimpleNamespace(**d))
+
+
+def isTool(name):
+    """Check whether `name` is on PATH and marked as executable."""
+    from shutil import which
+
+    return which(name) is not None
+
+
+def checkIfLigoIsInstalled():
+    print()
+    if not isTool("ligo"):
+        path = pathlib.Path("~/chinstrap/bin/ligo").expanduser()
+        if path.exists():
+            return path
+
+        msg = "\nTo run ligo locally, please install Ligo using `chinstrap install -c ligo -l`"
+        fatal(msg)
+
+    return "ligo"
+
+
+def ensureOSisNotDarwin():
+    if platform.system() == "Darwin":
+        fatal("This feature is not yet supported in macOS")

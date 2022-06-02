@@ -60,7 +60,7 @@ $ brew install libsodium libsecp256k1 gmp
 #### Installation
 
 ```bash
-git clone -b v1.0.1 https://github.com/ant4g0nist/chinstrap
+git clone -b v1.0.2 https://github.com/ant4g0nist/chinstrap
 cd chinstrap
 python3 setup.py install
 ```
@@ -68,7 +68,7 @@ python3 setup.py install
 ### Usage
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.1›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.2›
 ╰─➤  chinstrap
 
       _     _           _
@@ -109,7 +109,7 @@ $ chinstrap compile
 For Flextesa sandbox:
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.1›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.2›
 ╰─➤  chinstrap sandbox -h
 
       _     _           _
@@ -158,7 +158,7 @@ optional arguments:
 To run tests:
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.1›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.2›
 ╰─➤  chinstrap test
 ```
 
@@ -198,7 +198,7 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 * [x] Update Chinstrap to latest protocols
 * [x] Add SmartPy templates
 * [x] Add Ligo templates
-* [x] Update documentation to support v1.0.1
+* [x] Update documentation to support v1.0.2
 * [x] Create chinstrap.io landing page
 * [x] Add repl
 * [x] Improve Sandbox integrations in repl

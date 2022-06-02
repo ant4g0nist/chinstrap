@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Describe the issue**
-If an existing integration is misbehaving, please describe the current state and 
+If an existing integration is misbehaving, please describe the current state and
 what you expect to be happening.
-For new integrations, please share an example use case this integration will help 
+For new integrations, please share an example use case this integration will help
 Chinstrap support.

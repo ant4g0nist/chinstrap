@@ -41,7 +41,6 @@ def installLigoCompiler(local: bool, force: bool):
     spin = startSpinner("Installing Ligo")
     # Currently ligo is compiled only for Linux
     # and is available as docker for mac.
-    # For consistency, we just use docker for linux and mac
     spin = ligo.Ligo.installCompiler(local, force, spin)
     if spin:
         spin.stop_and_persist("🎉", "Ligo installed")

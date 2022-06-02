@@ -68,11 +68,44 @@ class Ligo:
 
     @staticmethod
     def installCompiler(local=False, force=False, spin=None):
-        suc, msg = pullImage("ligolang/ligo", "0.34.0")
-        if not suc:
-            spin.fail(f"Failed to install compiler. {msg}")
+        if local:
+            helpers.ensureOSisNotDarwin()
+            fullPath = os.path.expanduser("~/chinstrap/bin")
+            create = True
+            if os.path.exists(fullPath):
+                if spin:
+                    spin.stop()
+
+                if not helpers.checkToCreateDir(fullPath, force):
+                    create = False
+
+            if create:
+                os.makedirs(fullPath)
+
+                spin = helpers.startSpinner("Installing Ligo")
+                helpers.ensurePathExists(fullPath)
+                commands = [
+                    "curl --output /tmp/ligo https://gitlab.com/ligolang/\
+ligo/-/jobs/2507456718/artifacts/raw/ligo",
+                    "mv /tmp/ligo ~/chinstrap/bin/",
+                    "chmod +x ~/chinstrap/bin/ligo",
+                ]
+
+                for cmd in commands:
+                    proc = helpers.runCommand(cmd, shell=True)
+                    proc.wait()
+
+                spin.stop_and_persist("🎉", "Ligo installed")
+
             return
-        return spin
+
+        else:
+            suc, msg = pullImage("ligolang/ligo", "0.34.0")
+            if not suc:
+                spin.fail(f"Failed to install compiler. {msg}")
+                return
+
+            return spin
 
     @staticmethod
     def runCompiler(
@@ -92,7 +125,8 @@ class Ligo:
         options += f"--entry-point {entrypoint}"
 
         if local:
-            command = f"ligo compile contract {contract} {options}"
+            ligo = helpers.checkIfLigoIsInstalled()
+            command = f"{ligo} compile contract {contract} {options}"
 
             proc = helpers.runCommand(command, shell=True)
             proc.wait()
