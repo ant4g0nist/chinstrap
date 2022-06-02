@@ -47,20 +47,27 @@ def pullImage(image, tag):
 
 @makeSureDockerIsRunning()
 def addFilesToContainer(container, files, location):
-    buffer = io.BytesIO()
-    with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
-        for filename in files:
-            with open(filename, "rb") as _:
-                # current_file_data = current_file.read()
-                # current_file_buffer = io.BytesIO(initial_bytes=current_file_data)
-                _, short_filename = split(filename)
-                archive.add(filename, arcname=short_filename)
-    buffer.seek(0)
-    container.put_archive(
-        location,
-        buffer,
-    )
+    try:
+        buffer = io.BytesIO()
 
+        with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+            for filename in files:
+                with open(filename, "rb") as _:
+                    # current_file_data = current_file.read()
+                    # current_file_buffer = io.BytesIO(initial_bytes=current_file_data)
+                    _, short_filename = split(filename)
+                    archive.add(filename, arcname=short_filename)
+        buffer.seek(0)
+        container.put_archive(
+            location,
+            buffer,
+        )
+        return True
+        
+    except Exception as e:
+        print(e)
+    
+    return False
 
 @makeSureDockerIsRunning()
 def runLigoContainer(
@@ -110,9 +117,20 @@ def runCommandInContainer(
     )
 
     if files_to_add:
-        addFilesToContainer(container, files_to_add, "/root/")
+        success = addFilesToContainer(container, files_to_add, "/root/")
+        if not success:
+            container.remove()
 
-    container.start()
+    try:
+        container.start()
+    except Exception as e:
+        if "Mounts denied" in str(e):
+            fatal("\nCurrent project is not shared from the host to Docker. \
+You can configure shared paths from Docker -> Preferences... -> \
+Resources -> File Sharing")
+
+        raise e
+        
     return container
 
 
