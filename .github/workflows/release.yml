@@ -10,7 +10,7 @@ on:
 jobs:
     build-n-publish:
       name: Build and publish Chinstrap distribution
-      runs-on: ubuntu-18.04
+      runs-on: macos-10.15
       steps:
       - uses: actions/checkout@main
       - name: Set up Python 3.9
