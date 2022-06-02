@@ -198,11 +198,11 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 * [x] Update Chinstrap to latest protocols
 * [x] Add SmartPy templates
 * [x] Add Ligo templates
-* [x] Update documentation to support v1.0.2
+* [x] Update documentation to support v1.0.0
 * [x] Create chinstrap.io landing page
 * [x] Add repl
 * [x] Improve Sandbox integrations in repl
-* [ ] Release version 0.1.0 of the platform.
+* [ ] Release version 1.0.0 of the platform.
 * [ ] Add TypeScript generation for compiled contracts
 * [ ] Add support for Jest tests
 * [ ] Visual studio code plugin
