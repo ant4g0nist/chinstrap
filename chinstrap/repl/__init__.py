@@ -55,8 +55,10 @@ def sandbox(
     if args.stop:
         return _sandbox.halt()
 
-    _sandbox.initialize()
-    _sandbox.run()
+    if not _sandbox.isRunning(args.port):
+        _sandbox.initialize()
+        _sandbox.run()
+
     return _sandbox
 
 
@@ -155,7 +157,7 @@ def originate(
 
 @helpers.handleException()
 def sandboxAccounts():
-    sandbox.Sandbox.listAccounts()
+    Sandbox.Sandbox.listAccounts()
 
 
 @helpers.handleException()
@@ -185,7 +187,7 @@ def launchRepl(args):
     pretty.install()
 
     if args.network == "development":
-        _sandbox = sandbox.Sandbox(args)
+        _sandbox = Sandbox.Sandbox(args)
         _sandbox.args.detach = True
         _sandbox.initialize()
         _sandbox.run()

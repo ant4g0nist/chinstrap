@@ -70,6 +70,7 @@ class SandboxProtocols(Enum):
 class Sandbox:
     def __init__(self, args) -> None:
         self.args = args
+        self.loadState()
 
     def initialize(self):
         self.state = {"accounts": {}, "port": self.args.port}
@@ -87,6 +88,9 @@ class Sandbox:
             return
 
         spinner.succeed("Flextesa sandbox ready to use")
+
+    def loadState(self):
+        self.state = Sandbox.getSandboxState()
 
     @staticmethod
     @IsChinstrapProject()
@@ -125,6 +129,7 @@ class Sandbox:
                     f"Sandbox is already {container.status} \
 on port: {helpers.RED}{port}{helpers.RST}"
                 )
+
             else:
                 print(
                     f"Sandbox is already {container.status} \
@@ -190,6 +195,9 @@ on different port: {helpers.RED}{port}{helpers.RST}"
         spinner.succeed("Halted the sandbox")
 
     def generateAccount(self, index=0):
+        if not index:
+            index = len(self.state["accounts"])
+
         name = giveMeAName(index)
         cmd = f"flextesa key {name}"
         container = runInFlextesaContainerCli(cmd, detach=False)
@@ -203,16 +211,21 @@ on different port: {helpers.RED}{port}{helpers.RST}"
 
         return name, privateKey, line
 
-    def generateAccounts(self):
+    def generateAccounts(self, num_of_accounts=None):
+        if not num_of_accounts:
+            num_of_accounts = self.args.num_of_accounts
+
         spinner = halo.Halo(
-            text=f"Creating {self.args.num_of_accounts} accounts...", spinner="dots"
+            text=f"Creating {num_of_accounts} accounts...", spinner="dots"
         )
         spinner.start()
 
         self.accounts = []
 
-        for i in range(self.args.num_of_accounts):
-            name, privateKey, account = self.generateAccount(i)
+        index = len(self.state["accounts"])
+
+        for i in range(num_of_accounts):
+            name, privateKey, account = self.generateAccount(i + index)
             self.accounts.append(f"{account}")
 
         spinner.succeed(text="Accounts created!\n")
@@ -239,6 +252,8 @@ on different port: {helpers.RED}{port}{helpers.RST}"
         print(
             f"{helpers.RED}WARNING:{helpers.RST} Please do not use these accounts on mainnet!"
         )
+
+        self.dumpSandboxState(self.state)
 
     def launchSandbox(self):
         spinner = halo.Halo(text="Starting sandbox", spinner="dots")
