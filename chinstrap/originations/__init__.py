@@ -74,11 +74,10 @@ originated at {origination['address']} on {origination['date']}"
                     )
 
                     return True, origination
-
             except Exception:
                 pass
 
-            return True, origination
+            return False, ""
 
         return False, ""
 
