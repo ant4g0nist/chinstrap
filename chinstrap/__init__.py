@@ -150,11 +150,11 @@ def chinstrapAccount(args, env):
 def main(args, env=os.environ):
 
     pretty.install()
-    helpers.welcome_banner()
     parser = argparse.ArgumentParser(
         description=rich.print(
-            ":penguin:",
-            "[bold green]Chinstrap - a cute framework for \
+            "\n:penguin:",
+            "[bold green]\
+Chinstrap - a cute framework for \
 developing Tezos Smart Contracts[/bold green]!",
         )
     )
@@ -511,7 +511,8 @@ Be careful, this will re-originate all the contracts even if they are already de
 
     parser_m.set_defaults(func=chinstrapAccount)
 
-    if not args[1:]:
+    if not args[1:] or any(x in ["-h", "--help"] for x in args[1:]):
+        helpers.welcome_banner()
         parser.print_help()
         exit(1)
 
