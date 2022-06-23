@@ -519,7 +519,10 @@ Be careful, this will re-originate all the contracts even if they are already de
 
     parser_m.set_defaults(func=chinstrapAccount)
 
-    if not args[1:] or any(x in ["-h", "--help"] for x in args[1:]):
+    if any(x in ["-h", "--help"] for x in args[1:]):
+        helpers.welcome_banner()
+
+    if not args[1:]:
         helpers.welcome_banner()
         parser.print_help()
         exit(1)
