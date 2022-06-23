@@ -166,14 +166,14 @@ ligo/-/jobs/2507456718/artifacts/raw/ligo",
         return True, output
 
     def runAllTests(self):
-        if (
-            self.config.compiler.test == "smartpy"
-            or self.config.compiler.test == "pytest"
-        ):
-            tests = glob.iglob("./tests/*.py")
+        tests = []
 
-        elif "ligo" in self.config.compiler.test:
+        if "ligo" in self.config.compiler.test:
             tests = glob.iglob(f"./tests/*.test.{self.ext}")
+        else:
+            msg = f"<ansiyellow>No</ansiyellow> tests found for {self.config.compiler.test}"
+            helpers.printFormatted(msg)
+            self.status = 1
 
         for test in tests:
             if self.runSingleTest(test):

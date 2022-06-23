@@ -30,7 +30,7 @@ def chinstrapInitialize(args, env):
     chinstrapPath = os.path.dirname(os.path.abspath(__file__))
 
     targetPath = Path(f"{os.getcwd()}")
-    InitChinstrap(chinstrapPath, targetPath.name, targetPath, args.force)
+    InitChinstrap(chinstrapPath, targetPath.name, targetPath, args.force, args.sample)
 
 
 def chinstrapConfigVerification(args, _):
@@ -144,7 +144,7 @@ def chinstrapDevelopmentRepl(args, env):
 def chinstrapAccount(args, env):
     # if args.balance:
     #     core.checkAccountBalance(args.account, args.network)
-    helpers.fatal("TODO")
+    helpers.fatal("not yet implemented")
 
 
 def main(args, env=os.environ):
@@ -167,7 +167,15 @@ developing Tezos Smart Contracts[/bold green]!",
         default=False,
         action="store_true",
         help="Force initialize Chinstrap project in the current directory. \
-Be careful, this will potentioally overwrite files that exist in the directory.",
+Be careful, this will potentially overwrite files that exist in the directory.",
+    )
+    parser_a.add_argument(
+        "-s",
+        "--sample",
+        default=False,
+        action="store_true",
+        help="Initialize Chinstrap project with samples for contract, test and deployments. \
+Be careful, this will potentially overwrite files that exist in the directory.",
     )
     parser_a.set_defaults(func=chinstrapInitialize)
 

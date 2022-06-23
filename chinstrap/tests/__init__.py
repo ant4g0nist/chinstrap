@@ -34,7 +34,7 @@ class Tests:
 
 
 def runPyTests():
-    tests = glob.iglob("./tests/*.py")
+    tests = glob.iglob("./tests/*.pytest.py")
     for test in tests:
         runSinglePyTest(test)
 

@@ -9,10 +9,12 @@
 
 <h2>Chinstrap is supported by <a href='https://twitter.com/ant4g0nist/status/1498751543520153604?s=20&t=ICSAOjkYsYVNuQDHmkyP7w'>Tezos Foundation Grant</a></h2>
 
-### Community support channels
-- Telegram chat: https://t.me/chinstrap_io
-- Twitter      : https://twitter.com/chinstrap_io
-- Twitter      : https://twitter.com/ant4g0nist
+### Useful links
+* Website 🌐       : https://chinstrap.io
+* Telegram     💬 : https://t.me/chinstrap_io
+* Twitter      🐦 : https://twitter.com/chinstrap_io
+* Twitter      🐦 : https://twitter.com/ant4g0nist
+* Documentation 📖 : https://chinstrap.io/docs
 
 ### Overview
 
@@ -60,7 +62,7 @@ $ brew install libsodium libsecp256k1 gmp
 #### Installation
 
 ```bash
-git clone -b v1.0.2 https://github.com/ant4g0nist/chinstrap
+git clone https://github.com/ant4g0nist/chinstrap
 cd chinstrap
 python3 setup.py install
 ```
@@ -68,7 +70,7 @@ python3 setup.py install
 ### Usage
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.2›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap
 ╰─➤  chinstrap
 
       _     _           _
@@ -109,7 +111,7 @@ $ chinstrap compile
 For Flextesa sandbox:
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.2›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap
 ╰─➤  chinstrap sandbox -h
 
       _     _           _
@@ -158,7 +160,7 @@ optional arguments:
 To run tests:
 
 ```bash
-╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap  ‹v1.0.2›
+╭─ant4g0nist@d3n ~/Desktop/Tezos/chinstrap
 ╰─➤  chinstrap test
 ```
 
@@ -202,7 +204,7 @@ Loaded wallet tz1cagbr5u2YdyxtWA72z3KjEL1KJ2YEs71z. Balance: 0.000000
 * [x] Create chinstrap.io landing page
 * [x] Add repl
 * [x] Improve Sandbox integrations in repl
-* [ ] Release version 1.0.0 of the platform.
+* [x] Release version 1.0.0 of the platform.
 * [ ] Add TypeScript generation for compiled contracts
 * [ ] Add support for Jest tests
 * [ ] Visual studio code plugin

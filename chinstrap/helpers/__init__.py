@@ -20,7 +20,7 @@ from functools import wraps
 from prompt_toolkit import HTML
 from types import SimpleNamespace
 
-# from chinstrap.core import pytezos
+from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
 from prompt_toolkit.filters import IsDone
 from prompt_toolkit.layout.layout import Layout
@@ -78,7 +78,13 @@ def welcome_banner():
 | (__| | | | | | | \__ \ |_| | | (_| | |_) |
  \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/
                                      |_|
+
+Site          : https://chinstrap.io/
+Blog          : https://chinstrap.io/blog
+Telegram      : https://t.me/chinstrap_io
+Documentation : https://chinstrap.io/docs
 """  # noqa: W605
+
     )
 
     print_formatted_text(banner)
@@ -418,8 +424,10 @@ def checkToCreateFile(file, force):
     return True
 
 
-def checkToCreateDir(dir, force):
+def checkToCreateDir(dir, force, spinner=None):
     if os.path.exists(dir):
+        if spinner:
+            spinner
         if force or promptOverwrite(dir):
             shutil.rmtree(dir)
         else:

@@ -1,4 +1,5 @@
 import os
+import requests
 import chinstrap
 from rich import pretty
 from pytezos import pytezos
@@ -194,10 +195,15 @@ def launchRepl(args):
 
     _config = config.Config(args.network, compileFlag=True)
 
+    try:
+        balance = _config.wallet.balance()
+    except requests.exceptions.ConnectionError as e:
+        helpers.fatal(f"Failed to connect to {_config.network.host}. Please configure the network!")
+
     helpers.printFormatted(
         f"""Loaded wallet <ansiyellow><b>{_config.wallet.key.public_key_hash()}</b> \
     </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen>\
-<b>{_config.wallet.balance()}</b></ansigreen>\n"""
+<b>{balance}</b></ansigreen>\n"""
     )
 
     functions = {
