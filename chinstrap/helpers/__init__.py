@@ -79,12 +79,9 @@ def welcome_banner():
  \___|_| |_|_|_| |_|___/\__|_|  \__,_| .__/
                                      |_|
 
-Site          : https://chinstrap.io/
-Blog          : https://chinstrap.io/blog
-Telegram      : https://t.me/chinstrap_io
-Documentation : https://chinstrap.io/docs
+Docs 📖   : https://chinstrap.io/
+Tele 💬   : https://t.me/chinstrap_io
 """  # noqa: W605
-
     )
 
     print_formatted_text(banner)

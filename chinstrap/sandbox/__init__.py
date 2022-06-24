@@ -95,6 +95,10 @@ class Sandbox:
     @staticmethod
     @IsChinstrapProject()
     def dumpSandboxState(state):
+        path = pathlib.Path("build/chinstrap_sandbox_state")
+        if not path.exists():
+            helpers.mkdir("build/")
+        
         with open("build/chinstrap_sandbox_state", "w") as f:
             f.write(json.dumps(state))
 

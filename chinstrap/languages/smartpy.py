@@ -252,6 +252,29 @@ class SmartPy:
         downloader = SmartPyDownloader()
         downloader.displayTemplateCategories()
 
+    @staticmethod
+    def FA1_2_SmartPy(chinstrapPath):
+        spinner = halo.Halo(text="Creating FA.1.2 Template")
+        spinner.start()
+
+        targetPath = pathlib.Path(f"{os.getcwd()}")
+
+        helpers.copyFile(
+                f"{chinstrapPath}/core/sources/contracts/FA1.2.py",
+                f"{targetPath}/contracts/FA1.2.py",
+            )
+
+        helpers.copyFile(
+                f"{chinstrapPath}/core/sources/originations/1_FA12_origination.py",
+                f"{targetPath}/originations/1_FA12_origination.py",
+            )
+
+        helpers.copyFile(
+                f"{chinstrapPath}/core/sources/tests/FA1.2.smartpy.py",
+                f"{targetPath}/tests/FA1.2.smartpy.py",
+            )
+        
+        spinner.succeed(text=f"Creatied FA.1.2 templates!")
 
 class SmartPyDownloader:
     def __init__(self):

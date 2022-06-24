@@ -30,7 +30,7 @@ def chinstrapInitialize(args, env):
     chinstrapPath = os.path.dirname(os.path.abspath(__file__))
 
     targetPath = Path(f"{os.getcwd()}")
-    InitChinstrap(chinstrapPath, targetPath.name, targetPath, args.force, args.sample)
+    InitChinstrap(chinstrapPath, targetPath.name, targetPath, args.force, args.sample, args.create_account)
 
 
 def chinstrapConfigVerification(args, _):
@@ -80,20 +80,22 @@ def chinstrapCreate(args, _):
 
 
 def chinstrapTemplates(args, _):
+    if args.fa1_2_smartpy or args.language == TemplateOptions.FA1_2_SmartPy:
+        chinstrapPath = os.path.dirname(os.path.abspath(__file__))
+        SmartPy.FA1_2_SmartPy(chinstrapPath)    
+        return
+        
     if args.language == TemplateOptions.smartpy:
         SmartPy.templates()
 
-    else:
+    elif args.language:
         LigoLangTemplates.templates(args.language)
 
+    args.print_help()
 
 def chinstrapSandboxHandler(args, _):
     if args.list_accounts:
         return Sandbox.listAccounts()
-
-    # if args.running:
-    #     Sandbox.isRunning()
-    #     return
 
     sandbox = Sandbox(args)
     if args.initialize:
@@ -152,7 +154,7 @@ def main(args, env=os.environ):
     pretty.install()
     parser = argparse.ArgumentParser(
         description=rich.print(
-            "\n:penguin:",
+            ":penguin:",
             "[bold green]\
 Chinstrap - a cute framework for \
 developing Tezos Smart Contracts[/bold green]!",
@@ -177,6 +179,14 @@ Be careful, this will potentially overwrite files that exist in the directory.",
         help="Initialize Chinstrap project with samples for contract, test and deployments. \
 Be careful, this will potentially overwrite files that exist in the directory.",
     )
+    parser_a.add_argument(
+        "-a",
+        "--create_account",
+        default=False,
+        action="store_true",
+        help="Creates new account and save secret and mnemonic to local folder.",
+    )
+    
     parser_a.set_defaults(func=chinstrapInitialize)
 
     parser_b = subparsers.add_parser("config", help="Verify Chinstrap configuration")
@@ -270,14 +280,22 @@ Be careful, this will potentially overwrite files that exist in the directory.",
     parser_g = subparsers.add_parser(
         "templates", help="Download templates provided by SmartPy and *LIGO"
     )
-    parser_g.add_argument(
+    group = parser_g.add_mutually_exclusive_group(required=True)
+    group.add_argument(
         "-l",
         "--language",
         type=TemplateOptions,
         choices=list(TemplateOptions),
-        required=True,
-        help="The type of the item to create",
+        help="Target language to search templates for.",
     )
+    group.add_argument(
+        "-f",
+        "--fa1-2-smartpy",
+        default=False,
+        action="store_true",
+        help="Create FA1.2 contract, test and origination template",
+    )
+
     parser_g.set_defaults(func=chinstrapTemplates)
 
     parser_h = subparsers.add_parser("test", help="Run pytest/smartpy/ligo tests")

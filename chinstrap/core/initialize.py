@@ -6,7 +6,7 @@ from chinstrap import helpers
 
 
 class InitChinstrap:
-    def __init__(self, chinstrapPath, name, path, force, with_samples) -> None:
+    def __init__(self, chinstrapPath, name, path, force, with_samples, create_account) -> None:
         self.name = name
         self.path = path
         self.chinstrapPath = chinstrapPath
@@ -48,6 +48,9 @@ class InitChinstrap:
                 f"{self.path}/tests/sampleContract.smartpy.py",
             )
 
+        if create_account:
+            self.generateAccount()
+            
         msg = "\n<ansigreen>✔</ansigreen> Initialization successful. Happy hacking 🐧"
         helpers.printFormatted(msg)
 
@@ -106,6 +109,7 @@ class InitChinstrap:
             f"{self.path}/chinstrap-config.yml",
         )
 
+    def generateAccount(self):
         # default configuration taken from Pytezos
         curve    = b'ed'
         strength = 128
