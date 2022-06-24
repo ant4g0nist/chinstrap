@@ -64,6 +64,7 @@ def chinstrapRunTests(args, _):
     chinstrapPath = os.path.dirname(os.path.abspath(__file__))
     config = Config(compileFlag=True)
     tester = Tests(args, config, chinstrapPath)
+    
     if args.test:
         return tester.runTest(args.test)
 

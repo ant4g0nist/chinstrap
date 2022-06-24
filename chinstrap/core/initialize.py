@@ -40,12 +40,12 @@ class InitChinstrap:
 
             helpers.copyFile(
                 f"{self.chinstrapPath}/core/sources/tests/samplecontractPytest.py",
-                f"{self.path}/tests/samplecontract.pytest.py",
+                f"{self.path}/tests/samplecontract_pytest.py",
             )
 
             helpers.copyFile(
                 f"{self.chinstrapPath}/core/sources/tests/sampleContractSmartPy.py",
-                f"{self.path}/tests/sampleContract.smartpy.py",
+                f"{self.path}/tests/sampleContract_smartpy.py",
             )
 
         if create_account:

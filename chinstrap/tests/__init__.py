@@ -3,6 +3,8 @@ import os
 import sys
 import glob
 import pytest
+import chinstrap
+from argparse import Namespace
 from pytezos import ContractInterface
 from chinstrap.languages import ligo, smartpy
 from chinstrap.helpers import printFormatted
@@ -34,10 +36,9 @@ class Tests:
 
 
 def runPyTests():
-    tests = glob.iglob("./tests/*.pytest.py")
+    tests = glob.iglob("./tests/*_pytest.py")
     for test in tests:
         runSinglePyTest(test)
-
 
 def runSinglePyTest(file):
     stdoutOrig = sys.stdout
@@ -46,6 +47,7 @@ def runSinglePyTest(file):
 
     res = pytest.main(["--co", "-x", "-q", f"{file}"])
     sys.stdout = stdoutOrig
+
     if "no tests collected" in stdoutTemp.getvalue():
         return 0
 
@@ -61,6 +63,7 @@ def runSinglePyTest(file):
 
 def getContractInterface(contractName):
     # get contract interface.
+    
     if os.path.exists(
         f"./build/contracts/{contractName.lower()}/step_000_cont_0_contract.tz"
     ):
@@ -68,6 +71,25 @@ def getContractInterface(contractName):
             f"./build/contracts/{contractName.lower()}/step_000_cont_0_contract.tz"
         )
 
+    elif os.path.exists(
+        f"./build/contracts/{contractName}/step_000_cont_0_contract.tz"
+    ):
+        return ContractInterface.from_file(
+            f"./build/contracts/{contractName}/step_000_cont_0_contract.tz"
+        )
+
     # try to build if doesn't exist
     else:
+        # FIXME:
+        # Compile the contracts if contracts are not available
+        # args = Namespace(
+        #     contract=None,
+        #     local=None,
+        #     werror=None,
+        #     warning=False,
+        #     entrypoint="main",
+        # )
+        
+        # chinstrap.chinstrapCompileContracts(args, "")
+        # return getContractInterface(contractName)
         raise BaseException("Please compile the contracts")

@@ -132,7 +132,7 @@ class SmartPy:
         return True, ""
 
     def runAllTests(self):
-        tests = glob.iglob("./tests/*.smartpy.py")
+        tests = glob.iglob("./tests/*_smartpy.py")
         status = 0
         for test in tests:
             if self.runSingleTest(test):
