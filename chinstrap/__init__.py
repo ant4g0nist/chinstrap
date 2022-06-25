@@ -1,5 +1,4 @@
 import os
-import rich
 import logging
 import argparse
 import requests
@@ -30,7 +29,14 @@ def chinstrapInitialize(args, env):
     chinstrapPath = os.path.dirname(os.path.abspath(__file__))
 
     targetPath = Path(f"{os.getcwd()}")
-    InitChinstrap(chinstrapPath, targetPath.name, targetPath, args.force, args.sample, args.create_account)
+    InitChinstrap(
+        chinstrapPath,
+        targetPath.name,
+        targetPath,
+        args.force,
+        args.sample,
+        args.create_account,
+    )
 
 
 def chinstrapConfigVerification(args, _):
@@ -64,7 +70,7 @@ def chinstrapRunTests(args, _):
     chinstrapPath = os.path.dirname(os.path.abspath(__file__))
     config = Config(compileFlag=True)
     tester = Tests(args, config, chinstrapPath)
-    
+
     if args.test:
         return tester.runTest(args.test)
 
@@ -83,9 +89,9 @@ def chinstrapCreate(args, _):
 def chinstrapTemplates(args, _):
     if args.fa1_2_smartpy or args.language == TemplateOptions.FA1_2_SmartPy:
         chinstrapPath = os.path.dirname(os.path.abspath(__file__))
-        SmartPy.FA1_2_SmartPy(chinstrapPath)    
+        SmartPy.FA1_2_SmartPy(chinstrapPath)
         return
-        
+
     if args.language == TemplateOptions.smartpy:
         SmartPy.templates()
 
@@ -93,6 +99,7 @@ def chinstrapTemplates(args, _):
         LigoLangTemplates.templates(args.language)
 
     args.print_help()
+
 
 def chinstrapSandboxHandler(args, _):
     if args.list_accounts:
@@ -153,14 +160,7 @@ def chinstrapAccount(args, env):
 def main(args, env=os.environ):
 
     pretty.install()
-    parser = argparse.ArgumentParser(
-        description=rich.print(
-            ":penguin:",
-            "[bold green]\
-Chinstrap - a cute framework for \
-developing Tezos Smart Contracts[/bold green]!",
-        )
-    )
+    parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
 
     parser_a = subparsers.add_parser("init", help="Initialize a new Chinstrap project")
@@ -187,7 +187,7 @@ Be careful, this will potentially overwrite files that exist in the directory.",
         action="store_true",
         help="Creates new account and save secret and mnemonic to local folder.",
     )
-    
+
     parser_a.set_defaults(func=chinstrapInitialize)
 
     parser_b = subparsers.add_parser("config", help="Verify Chinstrap configuration")

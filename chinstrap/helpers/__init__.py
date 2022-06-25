@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import rich
 import time
 import fcntl
 import shutil
@@ -20,7 +21,6 @@ from functools import wraps
 from prompt_toolkit import HTML
 from types import SimpleNamespace
 
-from prompt_toolkit import prompt
 from prompt_toolkit.styles import Style
 from prompt_toolkit.filters import IsDone
 from prompt_toolkit.layout.layout import Layout
@@ -70,6 +70,7 @@ def context_title(m):
 
 
 def welcome_banner():
+
     banner = HTML(
         """
       _     _           _
@@ -85,6 +86,12 @@ Tele 💬   : https://t.me/chinstrap_io
     )
 
     print_formatted_text(banner)
+    rich.print(
+        ":penguin:",
+        "[bold green]\
+Chinstrap - a cute framework for \
+developing Tezos Smart Contracts[/bold green]!\n",
+    )
 
 
 def debug(msg):

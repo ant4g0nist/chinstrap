@@ -12,3 +12,4 @@ extend-ignore =
 extend-exclude =
     # Frozen and not subject to change in this repo:
     chinstrap/core/templates.py
+    chinstrap/core/sources/*

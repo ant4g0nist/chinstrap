@@ -3,8 +3,6 @@ import os
 import sys
 import glob
 import pytest
-import chinstrap
-from argparse import Namespace
 from pytezos import ContractInterface
 from chinstrap.languages import ligo, smartpy
 from chinstrap.helpers import printFormatted
@@ -40,6 +38,7 @@ def runPyTests():
     for test in tests:
         runSinglePyTest(test)
 
+
 def runSinglePyTest(file):
     stdoutOrig = sys.stdout
     stdoutTemp = io.StringIO()
@@ -63,7 +62,7 @@ def runSinglePyTest(file):
 
 def getContractInterface(contractName):
     # get contract interface.
-    
+
     if os.path.exists(
         f"./build/contracts/{contractName.lower()}/step_000_cont_0_contract.tz"
     ):
@@ -89,7 +88,7 @@ def getContractInterface(contractName):
         #     warning=False,
         #     entrypoint="main",
         # )
-        
+
         # chinstrap.chinstrapCompileContracts(args, "")
         # return getContractInterface(contractName)
         raise BaseException("Please compile the contracts")

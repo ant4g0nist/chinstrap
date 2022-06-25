@@ -260,21 +260,22 @@ class SmartPy:
         targetPath = pathlib.Path(f"{os.getcwd()}")
 
         helpers.copyFile(
-                f"{chinstrapPath}/core/sources/contracts/FA1.2.py",
-                f"{targetPath}/contracts/FA1.2.py",
-            )
+            f"{chinstrapPath}/core/sources/contracts/FA1.2.py",
+            f"{targetPath}/contracts/FA1.2.py",
+        )
 
         helpers.copyFile(
-                f"{chinstrapPath}/core/sources/originations/1_FA12_origination.py",
-                f"{targetPath}/originations/1_FA12_origination.py",
-            )
+            f"{chinstrapPath}/core/sources/originations/1_FA12_origination.py",
+            f"{targetPath}/originations/1_FA12_origination.py",
+        )
 
         helpers.copyFile(
-                f"{chinstrapPath}/core/sources/tests/FA1.2.smartpy.py",
-                f"{targetPath}/tests/FA1.2.smartpy.py",
-            )
-        
-        spinner.succeed(text=f"Creatied FA.1.2 templates!")
+            f"{chinstrapPath}/core/sources/tests/FA1.2.smartpy.py",
+            f"{targetPath}/tests/FA1.2.smartpy.py",
+        )
+
+        spinner.succeed(text="Creatied FA.1.2 templates!")
+
 
 class SmartPyDownloader:
     def __init__(self):

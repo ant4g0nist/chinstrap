@@ -197,8 +197,10 @@ def launchRepl(args):
 
     try:
         balance = _config.wallet.balance()
-    except requests.exceptions.ConnectionError as e:
-        helpers.fatal(f"Failed to connect to {_config.network.host}. Please configure the network!")
+    except requests.exceptions.ConnectionError:
+        helpers.fatal(
+            f"Failed to connect to {_config.network.host}. Please configure the network!"
+        )
 
     helpers.printFormatted(
         f"""Loaded wallet <ansiyellow><b>{_config.wallet.key.public_key_hash()}</b> \
