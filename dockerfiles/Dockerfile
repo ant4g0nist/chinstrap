@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update -y && apt install -y libsodium-dev libsecp256k1-dev libgmp-dev nodejs npm curl
+RUN apt update -y && apt install -y libsodium-dev libsecp256k1-dev libgmp-dev nodejs npm curl python3 python3-pip
 
 RUN pip3 install chinstrap -U
 
