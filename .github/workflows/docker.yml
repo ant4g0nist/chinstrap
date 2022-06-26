@@ -2,9 +2,9 @@ name: buildx
 
 on:
   pull_request:
-    branches: main
+    branches: buildx-github-actions
   push:
-    branches: main
+    branches: buildx-github-actions
 
 jobs:
   buildx:
