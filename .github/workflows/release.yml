@@ -4,8 +4,12 @@ on:
     workflow_dispatch:
     push:
       branches: [ main ]
+      paths:
+        chinstrap/version.py
     pull_request:
       branches: [ main ]
+      paths:
+        chinstrap/version.py
 
 jobs:
     build-n-publish:

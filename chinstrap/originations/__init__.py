@@ -178,7 +178,7 @@ originated at {origination['address']} on {origination['date']}"
                 spinner.fail(pformat(e))
 
         except Exception as e:
-            spinner.fail(e)
+            spinner.fail(pformat(e))
 
         fatal("")
 
