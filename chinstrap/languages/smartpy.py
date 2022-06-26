@@ -224,6 +224,9 @@ class SmartPy:
             for cmd in cmds:
                 proc = runCommand(cmd, shell=True)
                 proc.wait()
+                output = proc.stdout.read().decode()
+                error = proc.stderr.read().decode()
+                print(error)
 
             os.remove(f"{fullPath}/smartpy-install.sh")
     
