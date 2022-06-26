@@ -31,19 +31,12 @@ class Compilers(Enum):
 
 
 def installSmartPyCompiler(local: bool, force: bool):
-    spin = startSpinner("Installing SmartPy")
-    spin = smartpy.SmartPy.installCompiler(local, force, spin)
-    if spin:
-        spin.stop_and_persist("🎉", "SmartPy installed")
-
+    smartpy.SmartPy.installCompiler(local, force)
 
 def installLigoCompiler(local: bool, force: bool):
-    spin = startSpinner("Installing Ligo")
     # Currently ligo is compiled only for Linux
     # and is available as docker for mac.
-    spin = ligo.Ligo.installCompiler(local, force, spin)
-    if spin:
-        spin.stop_and_persist("🎉", "Ligo installed")
+    ligo.Ligo.installCompiler(local, force)
 
 
 def installCompiler(compiler: Compilers, local: bool, force: bool):

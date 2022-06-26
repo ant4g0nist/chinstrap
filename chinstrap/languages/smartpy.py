@@ -7,7 +7,7 @@ import pathlib
 import subprocess
 from chinstrap import helpers
 from prompt_toolkit import HTML
-from chinstrap.helpers import startSpinner
+from chinstrap.helpers import hexit, startSpinner
 from chinstrap.helpers import checkToCreateDir
 from chinstrap.core.templates import contracts
 from chinstrap.helpers import ensurePathExists
@@ -209,21 +209,14 @@ class SmartPy:
         helpers.mkdir("./build/contracts/")
 
     @staticmethod
-    def installCompiler(local=False, force=False, spin=None):
+    def installCompiler(local=False, force=False):
+        spin = startSpinner("Installing SmartPy")
+
         if local:
             fullPath = os.path.expanduser("~/chinstrap/bin")
-            create = True
-            if os.path.exists(fullPath):
-                if spin:
-                    spin.stop()
+            
+            os.makedirs(fullPath, exist_ok=True)
 
-                if not checkToCreateDir(fullPath, force):
-                    create = False
-
-            if create:
-                os.makedirs(fullPath)
-
-            spin = startSpinner("Installing SmartPy")
             ensurePathExists(fullPath)
 
             cmds = [
@@ -239,13 +232,14 @@ class SmartPy:
                 proc.wait()
 
             os.remove("/tmp/chinstrap-smartpy-install.sh")
-            return spin
+    
         else:
             suc, msg = pullImage(image, "latest")
             if not suc:
                 spin.fail(f"Failed to install compiler. {msg}")
-                return
-            return spin
+                hexit(1)
+            
+        spin.stop_and_persist("🎉", "SmartPy installed")
 
     @staticmethod
     def templates():

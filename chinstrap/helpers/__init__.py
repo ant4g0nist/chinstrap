@@ -584,6 +584,10 @@ def checkIfLigoIsInstalled():
     return "ligo"
 
 
-def ensureOSisNotDarwin():
+def ensureOSisNotDarwin(spinner=None):
     if platform.system() == "Darwin":
-        fatal("This feature is not yet supported in macOS")
+        if spinner:
+            spinner.fail(text="This feature is not yet supported in macOS")
+            hexit(1)
+        else:
+            fatal("This feature is not yet supported in macOS")

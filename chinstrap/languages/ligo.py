@@ -67,45 +67,33 @@ class Ligo:
         return 0
 
     @staticmethod
-    def installCompiler(local=False, force=False, spin=None):
+    def installCompiler(local=False, force=False):
+        spin = helpers.startSpinner("Installing Ligo")
+
         if local:
-            helpers.ensureOSisNotDarwin()
+            helpers.ensureOSisNotDarwin(spin)
             fullPath = os.path.expanduser("~/chinstrap/bin")
-            create = True
-            if os.path.exists(fullPath):
-                if spin:
-                    spin.stop()
+            os.makedirs(fullPath, exist_ok=True)
 
-                if not helpers.checkToCreateDir(fullPath, force):
-                    create = False
-
-            if create:
-                os.makedirs(fullPath)
-
-                spin = helpers.startSpinner("Installing Ligo")
-                helpers.ensurePathExists(fullPath)
-                commands = [
-                    "curl --output /tmp/ligo https://gitlab.com/ligolang/\
+            helpers.ensurePathExists(fullPath)
+            commands = [
+                "curl --output /tmp/ligo https://gitlab.com/ligolang/\
 ligo/-/jobs/2507456718/artifacts/raw/ligo",
-                    "mv /tmp/ligo ~/chinstrap/bin/",
-                    "chmod +x ~/chinstrap/bin/ligo",
-                ]
+                "mv /tmp/ligo ~/chinstrap/bin/",
+                "chmod +x ~/chinstrap/bin/ligo",
+            ]
 
-                for cmd in commands:
-                    proc = helpers.runCommand(cmd, shell=True)
-                    proc.wait()
-
-                spin.stop_and_persist("🎉", "Ligo installed")
-
-            return
+            for cmd in commands:
+                proc = helpers.runCommand(cmd, shell=True)
+                proc.wait()
 
         else:
             suc, msg = pullImage("ligolang/ligo", "0.34.0")
             if not suc:
                 spin.fail(f"Failed to install compiler. {msg}")
-                return
+                helpers.hexit(1)
 
-            return spin
+        spin.stop_and_persist("🎉", "Ligo installed")
 
     @staticmethod
     def runCompiler(
