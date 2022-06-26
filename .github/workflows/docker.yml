@@ -18,7 +18,7 @@ jobs:
         id: prepare
         run: |
           DOCKER_IMAGE=ant4g0nist/chinstrap
-          DOCKER_PLATFORMS=linux/amd64,linux/arm64,
+          DOCKER_PLATFORMS=linux/amd64,linux/arm64
           VERSION=latest
 
           TAGS="--tag ${DOCKER_IMAGE}:latest"
