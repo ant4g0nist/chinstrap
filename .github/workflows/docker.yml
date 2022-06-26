@@ -13,7 +13,8 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
-        ref: buildx-github-actions
+        with:
+          ref: buildx-github-actions
       -
         name: Prepare
         id: prepare
