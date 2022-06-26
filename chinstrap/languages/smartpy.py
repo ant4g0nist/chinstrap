@@ -41,11 +41,6 @@ class SmartPy:
 
         return fullPath
 
-    def printSmartPyVersion(self):
-        proc = runCommand(f"{self.compiler} --version", shell=True)
-        proc.wait()
-        print(proc.stdout.read().decode())
-
     def compileSources(self):
         contracts = glob.iglob("contracts/*.py")
         self.initBuildFolder()
@@ -98,7 +93,6 @@ class SmartPy:
         Compile with local SmartPy-cli
         """
         self.compiler = self.getCompiler()
-        self.printSmartPyVersion()
 
         command = [self.compiler, "compile", str(contract), "./build/contracts/"]
         proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -220,10 +214,10 @@ class SmartPy:
             ensurePathExists(fullPath)
 
             cmds = [
-                "curl -o /tmp/chinstrap-smartpy-install.sh -L https://smartpy.io/cli/install.sh",
-                "chmod +x /tmp/chinstrap-smartpy-install.sh",
-                "/tmp/chinstrap-smartpy-install.sh --prefix \
-                        ~/chinstrap/bin/smartpy-cli --with-smartml --yes",
+                "curl -o ~/chinstrap/bin/smartpy-install.sh -L https://smartpy.io/cli/install.sh",
+                "chmod +x ~/chinstrap/bin/smartpy-install.sh",
+                "~/chinstrap/bin/smartpy-install.sh --prefix \
+                        ~/chinstrap/bin/smartpy-cli",
                 '/bin/bash -c "chmod +x ~/chinstrap/bin/smartpy-cli/SmartPy.sh"',
             ]
 
@@ -231,7 +225,7 @@ class SmartPy:
                 proc = runCommand(cmd, shell=True)
                 proc.wait()
 
-            os.remove("/tmp/chinstrap-smartpy-install.sh")
+            os.remove(f"{fullPath}/smartpy-install.sh")
     
         else:
             suc, msg = pullImage(image, "latest")

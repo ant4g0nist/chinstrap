@@ -1,0 +1,10 @@
+# ignore everything
+*
+
+# except
+!chinstrap
+!main.py
+!bin/
+!setup.py
+!README.md
+!Pipfile
