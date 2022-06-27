@@ -3,8 +3,12 @@ name: buildx
 on:
   pull_request:
     branches: main
+      paths:
+        chinstrap/version.py    
   push:
     branches: main
+      paths:
+        chinstrap/version.py    
 
 jobs:
   buildx:

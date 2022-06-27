@@ -150,13 +150,6 @@ def chinstrapRunOriginations(args, env):
 def chinstrapDevelopmentRepl(args, env):
     launchRepl(args)
 
-
-def chinstrapAccount(args, env):
-    # if args.balance:
-    #     core.checkAccountBalance(args.account, args.network)
-    helpers.fatal("not yet implemented")
-
-
 def main(args, env=os.environ):
 
     pretty.install()
@@ -519,24 +512,6 @@ Be careful, this will re-originate all the contracts even if they are already de
         help="Display Ligo compiler warnings",
     )
     parser_k.set_defaults(func=chinstrapRunOriginations)
-
-    parser_m = subparsers.add_parser("account", help="Tezos account")
-    parser_m.add_argument(
-        "-b",
-        "--balance",
-        default=False,
-        action="store_true",
-        help="check given account balance",
-    )
-    parser_m.add_argument("-a", "--account", help="tz/KT address")
-    parser_m.add_argument(
-        "-n",
-        "--network",
-        default="development",
-        help="Select the configured network",
-    )
-
-    parser_m.set_defaults(func=chinstrapAccount)
 
     if any(x in ["-h", "--help"] for x in args[1:]):
         helpers.welcome_banner()
