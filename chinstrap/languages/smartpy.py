@@ -214,19 +214,16 @@ class SmartPy:
             ensurePathExists(fullPath)
 
             cmds = [
-                "curl -o ~/chinstrap/bin/smartpy-install.sh -L https://smartpy.io/cli/install.sh",
-                "chmod +x ~/chinstrap/bin/smartpy-install.sh",
-                "~/chinstrap/bin/smartpy-install.sh --prefix \
-                        ~/chinstrap/bin/smartpy-cli",
-                '/bin/bash -c "chmod +x ~/chinstrap/bin/smartpy-cli/SmartPy.sh"',
+                f"curl -o {fullPath}/smartpy-install.sh -L https://smartpy.io/cli/install.sh",
+                f"chmod +x {fullPath}/smartpy-install.sh",
+                f"{fullPath}/smartpy-install.sh --yes --prefix \
+                        {fullPath}/smartpy-cli",
+                f'/bin/bash -c "chmod +x {fullPath}/smartpy-cli/SmartPy.sh"',
             ]
 
             for cmd in cmds:
                 proc = runCommand(cmd, shell=True)
                 proc.wait()
-                output = proc.stdout.read().decode()
-                error = proc.stderr.read().decode()
-                print(error)
 
             os.remove(f"{fullPath}/smartpy-install.sh")
     
