@@ -1,19 +1,14 @@
 name: buildx
 
 on:
-    workflow_dispatch:
-    push:
-      branches: [ main ]
-      paths:
-        chinstrap/version.py
-    pull_request:
-      branches: [ main ]
-      paths:
-        chinstrap/version.py 
+  pull_request:
+    branches: main
+  push:
+    branches: main
 
 jobs:
   buildx:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.0
     steps:
       -
         name: Checkout
