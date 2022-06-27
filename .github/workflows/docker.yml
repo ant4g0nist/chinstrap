@@ -1,14 +1,15 @@
 name: buildx
 
 on:
-  pull_request:
-    branches: main
+    workflow_dispatch:
+    push:
+      branches: [ main ]
       paths:
-        chinstrap/version.py    
-  push:
-    branches: main
+        chinstrap/version.py
+    pull_request:
+      branches: [ main ]
       paths:
-        chinstrap/version.py    
+        chinstrap/version.py 
 
 jobs:
   buildx:

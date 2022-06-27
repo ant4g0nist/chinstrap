@@ -12,31 +12,31 @@ on:
         chinstrap/version.py
 
 jobs:
-    build-n-publish:
-      name: Build and publish Chinstrap distribution
-      runs-on: ubuntu-18.04
-      steps:
-      - uses: actions/checkout@main
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.9
+  build-n-publish:
+    name: Build and publish Chinstrap distribution
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@main
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
 
-      - name: Install pypa/build
-        run: >-
-          python -m
-          pip install
-          build
-          --user
-      - name: Build a binary wheel and a source tarball
-        run: >-
-          python -m
-          build
-          --sdist
-          --wheel
-          --outdir dist/
-          .
-      - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+    - name: Install pypa/build
+      run: >-
+        python -m
+        pip install
+        build
+        --user
+    - name: Build a binary wheel and a source tarball
+      run: >-
+        python -m
+        build
+        --sdist
+        --wheel
+        --outdir dist/
+        .
+    - name: Publish distribution 📦 to PyPI
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
