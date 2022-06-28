@@ -25,18 +25,20 @@ class SmartPy:
         self.args = args
 
     def getCompiler(self):
-        localChinstrapPath = os.path.expanduser("~/chinstrap/bin")
+        home = os.path.expanduser("~/chinstrap/bin")
 
-        fullPath = pathlib.Path(
+        smartpyHome = pathlib.Path(
             os.getenv(
                 "SMARTPY_HOME",
-                f"{localChinstrapPath}/smartpy-cli/SmartPy.sh",
+                home,
             )
         )
+        
+        fullPath = f"{smartpyHome}/smartpy-cli/SmartPy.sh"
 
         if not fullPath.is_file():
             fatal(
-                "Failed to find Smartpy compiler in ~/chinstrap/bin/smartpy-cli/SmartPy.sh. \
+                f"Failed to find Smartpy compiler in {fullPath}. \
                     Please set SMARTPY_HOME env or run \
                     'chinstrap install -c smartpy' to install SmartPy"
             )
