@@ -40,8 +40,8 @@ class Config:
             msg = f"Using <ansiyellow><b>{self.network.name}</b></ansiyellow> network"
             helpers.printFormatted(msg)
 
-        if self.network.accounts:
-            self.loadAccounts(compileFlag)
+            if self.network.accounts:
+                self.loadAccounts(compileFlag)
 
     def loadAccounts(self, compileFlag=False):
         self.accounts = []
