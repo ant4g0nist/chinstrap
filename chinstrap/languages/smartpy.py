@@ -25,10 +25,12 @@ class SmartPy:
         self.args = args
 
     def getCompiler(self):
+        localChinstrapPath = os.path.expanduser("~/chinstrap/bin")
+
         fullPath = pathlib.Path(
             os.getenv(
                 "SMARTPY_HOME",
-                f"{pathlib.Path.home()}/chinstrap/bin/smartpy-cli/SmartPy.sh",
+                f"{localChinstrapPath}/smartpy-cli/SmartPy.sh",
             )
         )
 
