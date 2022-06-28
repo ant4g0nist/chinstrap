@@ -34,7 +34,7 @@ class SmartPy:
             )
         )
         
-        fullPath = f"{smartpyHome}/smartpy-cli/SmartPy.sh"
+        fullPath = pathlib.Path(f"{smartpyHome}/smartpy-cli/SmartPy.sh")
 
         if not fullPath.is_file():
             fatal(
