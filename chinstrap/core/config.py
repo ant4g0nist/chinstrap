@@ -5,7 +5,7 @@ from pytezos import pytezos
 from chinstrap import helpers
 
 # from chinstrap.core.pytezos import pytezos
-from chinstrap.helpers import convertYamlToObject
+from chinstrap.helpers import convertYamlToObject, fatal
 from chinstrap.helpers import IsChinstrapProject
 
 
@@ -24,17 +24,16 @@ class Config:
                 self.network = self.config.network.development
                 self.network.name = "development"
 
-            elif network == "hangzhounet":
-                self.network = self.config.network.hangzhounet
-                self.network.name = "hangzhounet"
+            elif network == "jakarta":
+                self.network = self.config.network.jakarta
+                self.network.name = "jakarta"
 
             elif network == "mainnet":
                 self.network = self.config.network.mainnet
                 self.network.name = "mainnet"
 
-            elif network == "ithacanet":
-                self.network = self.config.network.ithacanet
-                self.network.name = "ithacanet"
+            else:
+                fatal("Unsupported network")
 
         if not compileFlag:
             msg = f"Using <ansiyellow><b>{self.network.name}</b></ansiyellow> network"

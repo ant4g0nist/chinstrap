@@ -9,18 +9,8 @@ chinstrap:
       accounts:
         - privateKeyFile: ./.secret
 
-    # hangzhounet:
-    #   host: https://hangzhounet.smartpy.io:443
-    #   accounts:
-    #     - privateKeyFile: ./.secret
-
-    # ithacanet:
-    #   host: https://ithacanet.smartpy.io:443
-    #   accounts:
-    #     - privateKeyFile: ./.secret
-
-    # mainnet:
-    #   host: https://mainnet.smartpy.io:443
+    # jakarta:
+    #   host: https://jakartanet.ecadinfra.com
     #   accounts:
     #     - privateKeyFile: ./.secret
 

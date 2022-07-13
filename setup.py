@@ -28,7 +28,7 @@ setup(
         "docker>=5.0.3",
         "pytest>=6.2.5",
         "ptpython>=3.0.20",
-        "pytezos>=3.3.4",
+        "pytezos>=3.6.0",
         "halo>=0.0.31",
         "python-gitlab>=3.1.0",
         "rich>=11.0.0",
