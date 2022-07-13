@@ -263,7 +263,7 @@ class SmartPy:
 
         helpers.copyFile(
             f"{chinstrapPath}/core/sources/tests/FA1.2.smartpy.py",
-            f"{targetPath}/tests/FA1.2.smartpy.py",
+            f"{targetPath}/tests/FA1.2_smartpy.py",
         )
 
         spinner.succeed(text="Creatied FA.1.2 templates!")
