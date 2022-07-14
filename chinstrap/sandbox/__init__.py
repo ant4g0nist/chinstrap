@@ -62,6 +62,7 @@ class SandboxProtocols(Enum):
     hangzhou = "Hangzhou"
     ithaca = "Ithaca"
     alpha = "Alpha"
+    jakarta = "Jakarta"
 
     def __str__(self):
         return self.value
