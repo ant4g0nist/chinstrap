@@ -193,20 +193,20 @@ def launchRepl(args):
         _sandbox.initialize()
         _sandbox.run()
 
-    _config = config.Config(args.network, compileFlag=True)
+    _config = config.Config(args.network)
 
-    try:
-        balance = _config.wallet.balance()
-    except requests.exceptions.ConnectionError:
-        helpers.fatal(
-            f"Failed to connect to {_config.network.host}. Please configure the network!"
-        )
+#     try:
+#         balance = _config.wallet.balance()
+#     except requests.exceptions.ConnectionError:
+#         helpers.fatal(
+#             f"Failed to connect to {_config.network.host}. Please configure the network!"
+#         )
 
-    helpers.printFormatted(
-        f"""Loaded wallet <ansiyellow><b>{_config.wallet.key.public_key_hash()}</b> \
-    </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen>\
-<b>{balance}</b></ansigreen>\n"""
-    )
+#     helpers.printFormatted(
+#         f"""Loaded wallet <ansiyellow><b>{_config.wallet.key.public_key_hash()}</b> \
+#     </ansiyellow>. Balance: <ansired>ꜩ</ansired> <ansigreen>\
+# <b>{balance}</b></ansigreen>\n"""
+#     )
 
     functions = {
         "pytezos": pytezos,
