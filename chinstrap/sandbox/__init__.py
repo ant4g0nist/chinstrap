@@ -14,7 +14,7 @@ from chinstrap.helpers.container import (
 from chinstrap.helpers.container import runCommandInContainer
 
 FlextesaImage = "oxheadalpha/flextesa"
-FlextesaImageTag = "latest"
+FlextesaImageTag = "20220510"
 
 CryptoNames = [
     "Alice",
