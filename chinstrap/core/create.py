@@ -62,12 +62,16 @@ class TestCounterContract(TestCase):
         """
         Create a barebone contract
         """
-        bones = """from chinstrap.chinstrapCore import getContract
+        bones = """from chinstrap.originations import getContract
+
 
 def deploy(chinstrapState, network, accounts):
-    contract = getContract("ContractName")
-    initial_storage = contract.storage.encode(0)
-    return initial_storage, contract"""
+    contract = getContract("SampleContract")
+    initial_storage = contract.storage.encode(
+        {"counter": 0, "owner": accounts[0].key.public_key_hash()}
+    )
+    return initial_storage, contract
+"""
 
         count = glob.glob("./originations/*.py").__len__()
         origination = "".join(x for x in name.title() if x.isalpha())
