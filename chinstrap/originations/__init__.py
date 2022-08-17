@@ -115,7 +115,7 @@ originated at {origination['address']} on {origination['date']}"
             )
             if originated:
                 addr = _origination["address"]
-                txhash = _origination["orignation_hash"]
+                txhash = _origination["origination_hash"]
                 spinner.succeed(
                     text=f"{currentContractName}'s origination transaction at: {txhash}"
                 )
@@ -146,7 +146,7 @@ originated at {origination['address']} on {origination['date']}"
             ][0]
             if self.config.network.name in self.state.networks:
                 self.state.networks[self.config.network.name][currentContractName] = {
-                    "orignation_hash": txhash,
+                    "origination_hash": txhash,
                     "address": addr,
                     "contract_hash": contractHash,
                     "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
@@ -154,7 +154,7 @@ originated at {origination['address']} on {origination['date']}"
             else:
                 self.state.networks[self.config.network.name] = {
                     currentContractName: {
-                        "orignation_hash": txhash,
+                        "origination_hash": txhash,
                         "address": addr,
                         "contract_hash": contractHash,
                         "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
@@ -258,6 +258,6 @@ class ChinstrapOriginationState:
                 print(
                     f"{helpers.YEL}{network:16} {helpers.RED}{origination['address']:32}\
  {helpers.WHT}{origination['date']:32} \
-{helpers.GRN}{origination['orignation_hash']:46} {helpers.YEL}{name}{helpers.RST}"
+{helpers.GRN}{origination['origination_hash']:46} {helpers.YEL}{name}{helpers.RST}"
                 )
             print("_" * len(title))
