@@ -61,9 +61,9 @@ class Originations:
         """
         if (
             self.config.network.name in self.state.networks
-            and contractHash in self.state.networks[self.config.network.name].keys()
+            and currentContractName in self.state.networks[self.config.network.name].keys()
         ):
-            origination = self.state.networks[self.config.network.name][contractHash]
+            origination = self.state.networks[self.config.network.name][currentContractName]
             # TODO: check on the network if the address exists
             try:
                 self.config.wallet.contract(origination["address"])
@@ -145,18 +145,18 @@ originated at {origination['address']} on {origination['date']}"
                 "originated_contracts"
             ][0]
             if self.config.network.name in self.state.networks:
-                self.state.networks[self.config.network.name][contractHash] = {
+                self.state.networks[self.config.network.name][currentContractName] = {
                     "orignation_hash": txhash,
                     "address": addr,
-                    "name": currentContractName,
+                    "contract_hash": contractHash,
                     "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
                 }
             else:
                 self.state.networks[self.config.network.name] = {
-                    contractHash: {
+                    currentContractName: {
                         "orignation_hash": txhash,
                         "address": addr,
-                        "name": currentContractName,
+                        "contract_hash": contractHash,
                         "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
                     }
                 }
