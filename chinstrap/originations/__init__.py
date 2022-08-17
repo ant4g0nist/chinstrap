@@ -61,9 +61,9 @@ class Originations:
         """
         if (
             self.config.network.name in self.state.networks
-            and contractHash in self.state.networks[self.config.network.name].keys()
+            and currentContractName in self.state.networks[self.config.network.name].keys()
         ):
-            origination = self.state.networks[self.config.network.name][contractHash]
+            origination = self.state.networks[self.config.network.name][currentContractName]
             # TODO: check on the network if the address exists
             try:
                 self.config.wallet.contract(origination["address"])
@@ -115,7 +115,7 @@ originated at {origination['address']} on {origination['date']}"
             )
             if originated:
                 addr = _origination["address"]
-                txhash = _origination["orignation_hash"]
+                txhash = _origination["origination_hash"]
                 spinner.succeed(
                     text=f"{currentContractName}'s origination transaction at: {txhash}"
                 )
@@ -145,18 +145,18 @@ originated at {origination['address']} on {origination['date']}"
                 "originated_contracts"
             ][0]
             if self.config.network.name in self.state.networks:
-                self.state.networks[self.config.network.name][contractHash] = {
-                    "orignation_hash": txhash,
+                self.state.networks[self.config.network.name][currentContractName] = {
+                    "origination_hash": txhash,
                     "address": addr,
-                    "name": currentContractName,
+                    "contract_hash": contractHash,
                     "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
                 }
             else:
                 self.state.networks[self.config.network.name] = {
-                    contractHash: {
-                        "orignation_hash": txhash,
+                    currentContractName: {
+                        "origination_hash": txhash,
                         "address": addr,
-                        "name": currentContractName,
+                        "contract_hash": contractHash,
                         "date": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
                     }
                 }
@@ -253,11 +253,11 @@ class ChinstrapOriginationState:
             title = f'\nNetwork {"":16} Address {"":32} Date {"":36} Tx {"":32} Name '
             print("_" * len(title))
             print(title)
-            for _hash, origination in originations.items():
+            for name, origination in originations.items():
                 # TODO:
                 print(
                     f"{helpers.YEL}{network:16} {helpers.RED}{origination['address']:32}\
  {helpers.WHT}{origination['date']:32} \
-{helpers.GRN}{origination['orignation_hash']:46} {helpers.YEL}{origination['name']}{helpers.RST}"
+{helpers.GRN}{origination['origination_hash']:46} {helpers.YEL}{name}{helpers.RST}"
                 )
             print("_" * len(title))
