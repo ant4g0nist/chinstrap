@@ -253,11 +253,11 @@ class ChinstrapOriginationState:
             title = f'\nNetwork {"":16} Address {"":32} Date {"":36} Tx {"":32} Name '
             print("_" * len(title))
             print(title)
-            for _hash, origination in originations.items():
+            for name, origination in originations.items():
                 # TODO:
                 print(
                     f"{helpers.YEL}{network:16} {helpers.RED}{origination['address']:32}\
  {helpers.WHT}{origination['date']:32} \
-{helpers.GRN}{origination['orignation_hash']:46} {helpers.YEL}{origination['name']}{helpers.RST}"
+{helpers.GRN}{origination['orignation_hash']:46} {helpers.YEL}{name}{helpers.RST}"
                 )
             print("_" * len(title))
