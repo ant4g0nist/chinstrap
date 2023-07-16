@@ -1,5 +1,7 @@
 # Chinstrap
 
+**This project is Archived in favor of [Taquito](https://tezostaquito.io/) and [Factori](https://www.functori.com/docs/factori/)**
+
 ![Chinstrap](https://raw.githubusercontent.com/ant4g0nist/chinstrap/main/docs/images/logo.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/madhuakula/kubernetes-goat/blob/master/LICENSE)
